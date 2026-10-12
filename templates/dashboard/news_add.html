@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Yangi Yangilik Qo'shish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Yangi Yangilik Qo'shish</h4>
+        <small class="text-muted">Maktab saytiga yangi maqola yoki e'lon joylash</small>
+    </div>
+    <a href="{% url 'dashboard_news' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+        &larr; Orqaga
+    </a>
+</div>
+
+<div class="dash-card">
+    <form method="post" action="{% url 'dashboard_news_add' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row g-3">
+            <div class="col-12 col-md-8">
+                <label class="form-label small fw-bold text-dark">Sarlavha (Mavzu) <span class="text-danger">*</span></label>
+                <input type="text" name="title" class="form-control" placeholder="Masalan: Maktabimizda kitobxonlik haftaligi o'tkazildi" required>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Kategoriya</label>
+                <select name="category" class="form-select">
+                    <option value="">Tanlang...</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small fw-bold text-dark">Qisqacha mazmuni (Annotatsiya)</label>
+                <textarea name="excerpt" rows="2" class="form-control" placeholder="Maqolaning qisqa ta'rifi (kartalarda ko'rinadi)"></textarea>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small fw-bold text-dark">To'liq matni</label>
+                <textarea name="content" rows="6" class="form-control" placeholder="Yangilikning to'liq tafsiloti..."></textarea>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Muqova Rasmi</label>
+                <input type="file" name="cover_image" class="form-control" accept="image/*">
+                <small class="text-muted" style="font-size:0.75rem;">JPG yoki PNG formatdagi rasm tanlang</small>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Holati</label>
+                <select name="status" class="form-select">
+                    <option value="published" selected>Darhol saytga chiqarish (E'lon qilish)</option>
+                    <option value="draft">Qoralama (Hozircha saytda ko'rinmasin)</option>
+                </select>
+            </div>
+
+            <div class="col-12 pt-3 border-top d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                    <i class="fas fa-paper-plane me-1"></i> Saytga Joylash
+                </button>
+                <a href="{% url 'dashboard_news' %}" class="btn btn-light border rounded-pill px-3">
+                    Bekor qilish
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

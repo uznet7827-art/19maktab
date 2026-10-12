@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Boshqaruv Paneli{% endblock %} | 19-Maktab Admin</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #3730A3;
+            --secondary: #06B6D4;
+            --accent: #FACC15;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 70px; /* Space for mobile bottom bar */
+        }
+
+        @media (min-width: 992px) {
+            body {
+                padding-bottom: 0;
+            }
+        }
+
+        /* Top Bar */
+        .dash-topbar {
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        /* Sidebar for desktop */
+        .dash-sidebar {
+            width: var(--sidebar-width);
+            background: #FFFFFF;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 60px;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 1010;
+            padding: 1rem 0.75rem;
+            display: none;
+        }
+
+        @media (min-width: 992px) {
+            .dash-sidebar {
+                display: block;
+            }
+            .dash-main-content {
+                margin-left: var(--sidebar-width);
+            }
+        }
+
+        .nav-item-dash {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 0.9rem;
+            border-radius: 10px;
+            color: #475569;
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-item-dash:hover {
+            background-color: #F1F5F9;
+            color: var(--primary);
+        }
+
+        .nav-item-dash.active {
+            background-color: #EEF2FF;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-item-dash i {
+            font-size: 1.1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Mobile Bottom Navigation Bar (Super convenient on phones) */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1030;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 992px) {
+            .mobile-bottom-nav {
+                display: none;
+            }
+        }
+
+        .bottom-nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #64748B;
+            font-size: 0.68rem;
+            font-weight: 600;
+            gap: 0.2rem;
+            padding: 0.25rem;
+            flex: 1;
+        }
+
+        .bottom-nav-link i {
+            font-size: 1.15rem;
+        }
+
+        .bottom-nav-link.active {
+            color: var(--primary);
+        }
+
+        /* Modern Dashboard Cards */
+        .dash-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+            margin-bottom: 1.25rem;
+        }
+
+        .stat-dash-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-dash-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .stat-dash-num {
+            font-size: 1.45rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #0F172A;
+        }
+
+        .stat-dash-label {
+            font-size: 0.75rem;
+            color: #64748B;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Badges */
+        .badge-status {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+        }
+        .status-new { background: #FEF3C7; color: #D97706; }
+        .status-read { background: #E0E7FF; color: #4338CA; }
+        .status-replied { background: #D1FAE5; color: #059669; }
+        .status-closed { background: #F1F5F9; color: #64748B; }
+
+        /* Tables touch scroll */
+        .table-responsive {
+            border-radius: 10px;
+        }
+
+        /* Mobile specific enhancements */
+        @media (max-width: 768px) {
+            .dash-topbar {
+                padding: 0 0.85rem;
+            }
+            .dash-main-content {
+                padding: 1rem 0.75rem !important;
+            }
+            .stat-dash-card {
+                padding: 0.75rem 0.85rem;
+                gap: 0.75rem;
+            }
+            .stat-dash-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            .stat-dash-num {
+                font-size: 1.25rem;
+            }
+            .dash-card {
+                padding: 1rem 0.85rem;
+                border-radius: 12px;
+            }
+            h1, h2, h3, h4, h5 {
+                font-size: 1.15rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <header class="dash-topbar">
+        <div class="d-flex align-items-center gap-2">
+            <span class="rounded-3 d-flex align-items-center justify-content-center text-white" 
+                  style="width: 32px; height: 32px; background: linear-gradient(135deg, #4F46E5, #06B6D4);">
+                <i class="fas fa-graduation-cap"></i>
+            </span>
+            <span class="fw-bold fs-6 tracking-tight">19-Maktab Boshqaruvi</span>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <a href="/" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1" style="font-size: 0.75rem;">
+                <i class="fas fa-external-link-alt me-1"></i> <span class="d-none d-sm-inline">Asosiy sayt</span>
+            </a>
+            <a href="/admin/" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;">
+                <i class="fas fa-shield-alt me-1"></i> Django Admin
+            </a>
+            <a href="/admin/logout/" class="btn btn-sm btn-light rounded-circle text-danger" title="Chiqish" style="width: 32px; height: 32px; display:flex; align-items:center; justify-content:center;">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- SIDEBAR FOR DESKTOP -->
+    <aside class="dash-sidebar">
+        <div class="px-2 mb-3">
+            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Boshqaruv Bo'limlari</small>
+        </div>
+        <nav>
+            <a href="{% url 'dashboard_home' %}" class="nav-item-dash {% if active_menu == 'home' %}active{% endif %}">
+                <i class="fas fa-th-large text-primary"></i> Asosiy Panel
+            </a>
+            <a href="{% url 'dashboard_news' %}" class="nav-item-dash {% if active_menu == 'news' %}active{% endif %}">
+                <i class="fas fa-newspaper text-info"></i> Yangiliklar
+            </a>
+            <a href="{% url 'dashboard_teachers' %}" class="nav-item-dash {% if active_menu == 'teachers' %}active{% endif %}">
+                <i class="fas fa-chalkboard-teacher text-success"></i> Ustozlar
+            </a>
+            <a href="{% url 'dashboard_achievements' %}" class="nav-item-dash {% if active_menu == 'achievements' %}active{% endif %}">
+                <i class="fas fa-trophy text-warning"></i> O'quvchilar yutuqlari
+            </a>
+            <a href="{% url 'dashboard_gallery' %}" class="nav-item-dash {% if active_menu == 'gallery' %}active{% endif %}">
+                <i class="fas fa-images text-danger"></i> Fotogalereya
+            </a>
+            <a href="{% url 'dashboard_contacts' %}" class="nav-item-dash {% if active_menu == 'contacts' %}active{% endif %}">
+                <i class="fas fa-inbox text-warning"></i> Murojaatlar
+                {% if new_contacts_count %}
+                    <span class="badge bg-danger rounded-pill ms-auto" style="font-size: 0.65rem;">{{ new_contacts_count }}</span>
+                {% endif %}
+            </a>
+            <a href="{% url 'dashboard_settings' %}" class="nav-item-dash {% if active_menu == 'settings' %}active{% endif %}">
+                <i class="fas fa-sliders-h text-secondary"></i> Maktab Sozlamalari
+            </a>
+        </nav>
+
+        <hr class="my-3" style="border-color: var(--border-color);">
+
+        <div class="px-2 mb-2">
+            <small class="text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Tezkor Qo'shish</small>
+        </div>
+        <nav>
+            <a href="{% url 'dashboard_news_add' %}" class="nav-item-dash">
+                <i class="fas fa-plus-circle text-info"></i> Yangilik qo'shish
+            </a>
+            <a href="{% url 'dashboard_teacher_add' %}" class="nav-item-dash">
+                <i class="fas fa-user-plus text-success"></i> Ustoz qo'shish
+            </a>
+            <a href="{% url 'dashboard_achievement_add' %}" class="nav-item-dash">
+                <i class="fas fa-trophy text-warning"></i> Yutuq qo'shish
+            </a>
+            <a href="{% url 'dashboard_gallery_add' %}" class="nav-item-dash">
+                <i class="fas fa-camera text-danger"></i> Rasm yuklash
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="dash-main-content p-3 p-md-4">
+        <!-- Messages Alert -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show rounded-3 py-2 px-3 small mb-3" role="alert">
+                    <i class="fas fa-info-circle me-1"></i> {{ message }}
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION (Optimized for smartphone thumbs) -->
+    <nav class="mobile-bottom-nav">
+        <a href="{% url 'dashboard_home' %}" class="bottom-nav-link {% if active_menu == 'home' %}active{% endif %}">
+            <i class="fas fa-th-large"></i>
+            <span>Asosiy</span>
+        </a>
+        <a href="{% url 'dashboard_news' %}" class="bottom-nav-link {% if active_menu == 'news' %}active{% endif %}">
+            <i class="fas fa-newspaper"></i>
+            <span>Yangilik</span>
+        </a>
+        <a href="{% url 'dashboard_teachers' %}" class="bottom-nav-link {% if active_menu == 'teachers' %}active{% endif %}">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>Ustozlar</span>
+        </a>
+        <a href="{% url 'dashboard_contacts' %}" class="bottom-nav-link position-relative {% if active_menu == 'contacts' %}active{% endif %}">
+            <i class="fas fa-inbox"></i>
+            <span>Murojaat</span>
+            {% if new_contacts_count %}
+                <span class="position-absolute top-1 start-60 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 8px; height: 8px;"></span>
+            {% endif %}
+        </a>
+        <a href="{% url 'dashboard_settings' %}" class="bottom-nav-link {% if active_menu == 'settings' %}active{% endif %}">
+            <i class="fas fa-cog"></i>
+            <span>Sozlama</span>
+        </a>
+    </nav>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

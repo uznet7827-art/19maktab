@@ -1,0 +1,92 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Murojaatlar Boshqaruvi{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Kelib Tushgan Murojaatlar</h4>
+        <small class="text-muted">Ota-onalar va o'quvchilar xabarlari</small>
+    </div>
+
+    <!-- Filter chips -->
+    <div class="d-flex gap-1 flex-wrap">
+        <a href="{% url 'dashboard_contacts' %}" class="btn btn-sm rounded-pill px-3 {% if not status_filter %}btn-primary{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
+            Barchasi
+        </a>
+        <a href="{% url 'dashboard_contacts' %}?status=new" class="btn btn-sm rounded-pill px-3 {% if status_filter == 'new' %}btn-warning text-dark{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
+            Yangi
+        </a>
+        <a href="{% url 'dashboard_contacts' %}?status=read" class="btn btn-sm rounded-pill px-3 {% if status_filter == 'read' %}btn-info text-white{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
+            O'qilgan
+        </a>
+        <a href="{% url 'dashboard_contacts' %}?status=replied" class="btn btn-sm rounded-pill px-3 {% if status_filter == 'replied' %}btn-success text-white{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
+            Javob berilgan
+        </a>
+    </div>
+</div>
+
+<div class="dash-card">
+    {% if contacts %}
+        <div class="d-flex flex-column gap-3">
+            {% for c in contacts %}
+                <div class="p-3 rounded-3 border bg-white shadow-sm position-relative">
+                    <div class="d-flex justify-content-between align-items-start mb-2 flex-wrap gap-2">
+                        <div>
+                            <h6 class="fw-bold mb-0 text-dark">{{ c.full_name }}</h6>
+                            <small class="text-muted">
+                                <i class="fas fa-phone-alt me-1 text-primary"></i> {{ c.phone|default:"Tel ko'rsatilmagan" }} | 
+                                <i class="fas fa-envelope me-1 text-info"></i> {{ c.email|default:"Email yo'q" }}
+                            </small>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge-status status-{{ c.status }}">{{ c.get_status_display }}</span>
+                            <small class="text-secondary" style="font-size: 0.72rem;">{{ c.created_at|date:"d.m.Y H:i" }}</small>
+                        </div>
+                    </div>
+
+                    <div class="p-2 rounded-2 bg-light mb-2">
+                        <strong class="d-block small text-dark mb-1">Mavzu: {{ c.subject }}</strong>
+                        <p class="small text-secondary mb-0" style="white-space: pre-line;">{{ c.message }}</p>
+                    </div>
+
+                    {% if c.admin_reply %}
+                        <div class="p-2 rounded-2 bg-success-subtle border border-success-subtle mb-2">
+                            <small class="fw-bold text-success d-block">Admin javobi:</small>
+                            <small class="text-dark">{{ c.admin_reply }}</small>
+                        </div>
+                    {% endif %}
+
+                    <!-- Action form (Compact and mobile friendly) -->
+                    <form method="post" action="{% url 'dashboard_contacts' %}" class="d-flex align-items-center gap-2 flex-wrap pt-2 border-top">
+                        {% csrf_token %}
+                        <input type="hidden" name="contact_id" value="{{ c.id }}">
+                        
+                        <select name="new_status" class="form-select form-select-sm rounded-pill" style="width: auto; font-size: 0.75rem;">
+                            <option value="new" {% if c.status == 'new' %}selected{% endif %}>Yangi</option>
+                            <option value="read" {% if c.status == 'read' %}selected{% endif %}>O'qilgan</option>
+                            <option value="replied" {% if c.status == 'replied' %}selected{% endif %}>Javob berilgan</option>
+                            <option value="closed" {% if c.status == 'closed' %}selected{% endif %}>Yopilgan</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3" style="font-size: 0.75rem;">
+                            <i class="fas fa-check me-1"></i> Saqlash
+                        </button>
+
+                        <button type="submit" name="action" value="delete" class="btn btn-sm btn-outline-danger rounded-pill px-2 ms-auto" 
+                                onclick="return confirm('Murojaatni o\'chirishni tasdiqlaysizmi?')" style="font-size: 0.75rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-2 opacity-50"></i>
+            <h6 class="fw-bold">Murojaatlar topilmadi</h6>
+            <p class="text-muted small mb-0">Hozircha tanlangan toifada xabarlar yo'q.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

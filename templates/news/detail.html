@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }} — {{ site_settings.name|default:"19-maktab" }}{% endblock %}
+
+{% block og_title %}{{ news.title }}{% endblock %}
+{% block og_description %}{{ news.excerpt|default:news.title }}{% endblock %}
+{% block og_image %}{% if news.cover_image %}{{ news.cover_image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+<article class="section" style="padding-top: calc(var(--header-height) + 2rem);">
+  <div class="container" style="max-width: 900px;">
+    <!-- BREADCRUMBS -->
+    <nav class="breadcrumbs" aria-label="Non ushoqlari yo'li">
+      <a href="{% url 'home' %}"><i class="fas fa-home"></i> Bosh sahifa</a>
+      <span>/</span>
+      <a href="{% url 'news:list' %}">Yangiliklar</a>
+      <span>/</span>
+      <span style="color: var(--text);">{{ news.title|truncatechars:35 }}</span>
+    </nav>
+
+    <!-- HEADER & META -->
+    <header class="news-detail-header">
+      {% if news.category %}
+      <span class="news-category-badge" style="position: relative; display: inline-block; top: 0; left: 0; margin-bottom: 1rem; {% if news.category.color %}background: {{ news.category.color }};{% endif %}">
+        {{ news.category.name }}
+      </span>
+      {% endif %}
+
+      <h1 class="news-detail-title" style="font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.25; margin-bottom: 1.25rem;">
+        {{ news.title }}
+      </h1>
+
+      <div class="news-detail-meta">
+        <span><i class="far fa-calendar-alt"></i> {{ news.published_at|date:'d-F, Y' }}</span>
+        <span><i class="far fa-eye"></i> {{ news.views_count|default:1 }} ko'rishlar</span>
+        {% if news.author %}
+        <span><i class="far fa-user"></i> {{ news.author }}</span>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- COVER IMAGE -->
+    {% if news.cover_image %}
+    <div class="news-detail-cover">
+      <img src="{{ news.cover_image.url }}" alt="{{ news.title }}">
+    </div>
+    {% endif %}
+
+    <!-- ARTICLE CONTENT -->
+    <div class="news-detail-content">
+      {{ news.content|safe }}
+    </div>
+
+    <!-- ADDITIONAL GALLERY IMAGES -->
+    {% if news.images.all %}
+    <section style="margin: 3rem 0;">
+      <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-images text-cyan"></i> Fotogalereya</h3>
+      <div class="detail-gallery-grid">
+        {% for img in news.images.all %}
+        <div class="detail-gallery-item" data-lightbox-src="{{ img.image.url }}" data-title="{{ img.caption|default:news.title }}">
+          <img src="{{ img.image.url }}" alt="{{ img.caption|default:news.title }}" loading="lazy">
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- VIDEO EMBED IF PRESENT -->
+    {% if news.video_url %}
+    <section style="margin: 3rem 0;">
+      <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-play-circle text-cyan"></i> Video lavha</h3>
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius); box-shadow: var(--shadow);">
+        <iframe src="{{ news.video_url }}" style="position: absolute; top:0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen></iframe>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- PDF ATTACHMENTS / DOCUMENTS -->
+    {% if news.documents.all %}
+    <section class="news-documents-list">
+      <h3 style="margin-bottom: 1.25rem;"><i class="fas fa-file-pdf text-cyan"></i> Biriktirilgan hujjatlar</h3>
+      {% for doc in news.documents.all %}
+      <div class="news-doc-item">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <i class="fas fa-file-pdf" style="color: #EF4444; font-size: 1.5rem;"></i>
+          <div>
+            <strong style="display:block; font-size: 0.95rem;">{{ doc.title|default:"Hujjat fayli" }}</strong>
+            <small style="color: var(--text-muted);">{{ doc.file.size|filesizeformat }}</small>
+          </div>
+        </div>
+        <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline" download target="_blank">
+          <i class="fas fa-download"></i> Yuklab olish
+        </a>
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- SHARE BAR -->
+    <div class="news-share-bar">
+      <div style="font-weight: 600;">
+        <i class="fas fa-share-alt"></i> Ushbu yangilikni ulashing:
+      </div>
+      <div class="share-buttons">
+        <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ news.title|urlencode }}" 
+           target="_blank" rel="noopener" class="share-btn share-btn-tg" aria-label="Telegram orqali ulashish">
+          <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+           target="_blank" rel="noopener" class="share-btn share-btn-fb" aria-label="Facebook orqali ulashish">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <button type="button" class="share-btn share-btn-copy" id="copyShareBtn" aria-label="Havoladan nusxa olish" title="Havolani nusxalash">
+          <i class="fas fa-link"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div style="text-align: center; margin: 3rem 0;">
+      <a href="{% url 'news:list' %}" class="btn btn-outline btn-lg">
+        <i class="fas fa-arrow-left"></i> Barcha yangiliklarga qaytish
+      </a>
+    </div>
+
+    <!-- RELATED NEWS -->
+    {% if related_news %}
+    <section style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--card-border);">
+      <h3 style="margin-bottom: 2rem;">Mavzuga doir boshqa yangiliklar</h3>
+      <div class="news-grid">
+        {% for rel in related_news %}
+        <article class="news-card">
+          <a href="{% url 'news:detail' rel.slug %}" class="news-card-link">
+            <div class="news-card-image" style="height: 180px;">
+              {% if rel.cover_image %}
+              <img src="{{ rel.cover_image.url }}" alt="{{ rel.title }}" loading="lazy">
+              {% else %}
+              <div class="news-card-image-placeholder"><i class="fas fa-newspaper"></i></div>
+              {% endif %}
+            </div>
+            <div class="news-card-body">
+              <time class="news-date">{{ rel.published_at|date:'d.m.Y' }}</time>
+              <h4 class="news-title" style="font-size: 1.05rem;">{{ rel.title }}</h4>
+            </div>
+          </a>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</article>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyBtn = document.getElementById('copyShareBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          Toast.show('Havola nusxalandi!', 'success');
+        } catch (err) {
+          Toast.show('Havolani nusxalab bo\'lmadi', 'warning');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

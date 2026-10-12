@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Biz bilan bog'lanish — {{ site_settings.name|default:"19-maktab" }}{% endblock %}
+
+{% block content %}
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div class="container">
+    <span class="section-subtitle">Savol va takliflaringiz bormi?</span>
+    <h1 class="page-title">Aloqa va Qabulxona</h1>
+    <p class="page-desc">
+      Maktabimiz ma'muriyatiga to'g'ridan-to'g'ri xabar yuborishingiz yoki ko'rsatilgan raqamlar orqali bog'lanishingiz mumkin.
+    </p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 3.5rem;">
+  <div class="container">
+    <div class="contact-layout">
+      <!-- LEFT COLUMN: CONTACT DETAILS -->
+      <div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem;">Ma'lumotlarimiz</h2>
+        <p style="margin-bottom: 2rem;">
+          Biz o'quvchilar va ota-onalar bilan ochiq muloqotga tayyormiz. Har qanday savol bilan murojaat qiling.
+        </p>
+
+        <div class="contact-info-cards">
+          <div class="contact-item-card">
+            <div class="contact-card-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="contact-card-text">
+              <h4>Manzilimiz</h4>
+              <p>{{ site_settings.address|default:"Toshkent shahri, Yunusobod tumani, 19-umumta'lim maktabi" }}</p>
+            </div>
+          </div>
+
+          <div class="contact-item-card">
+            <div class="contact-card-icon"><i class="fas fa-phone-alt"></i></div>
+            <div class="contact-card-text">
+              <h4>Telefon raqamlar</h4>
+              <p>{{ site_settings.phone|default:"+998 71 200 00 19" }}</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Qabulxona: +998 71 200 00 20</p>
+            </div>
+          </div>
+
+          <div class="contact-item-card">
+            <div class="contact-card-icon"><i class="fas fa-envelope"></i></div>
+            <div class="contact-card-text">
+              <h4>Elektron pochta</h4>
+              <p>{{ site_settings.email|default:"info@maktab19.uz" }}</p>
+            </div>
+          </div>
+
+          <div class="contact-item-card">
+            <div class="contact-card-icon"><i class="fas fa-clock"></i></div>
+            <div class="contact-card-text">
+              <h4>Ish tartibi</h4>
+              <p>Dushanba – Shanba: 08:00 – 18:00</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Yakshanba: Dam olish kuni</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: CONTACT FORM -->
+      <div class="contact-form-wrap">
+        <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Xabar yuborish</h3>
+
+        <form method="POST" action="{% url 'contacts:contact' %}" data-validate novalidate>
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="id_full_name">F.I.SH (To'liq ismingiz) *</label>
+            <input type="text" 
+                   id="id_full_name" 
+                   name="full_name" 
+                   class="form-control" 
+                   placeholder="Masalan: Karim Aliyev" 
+                   required>
+            <div class="form-feedback">Iltimos, ismingizni kiriting.</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="id_phone">Telefon raqam *</label>
+              <input type="tel" 
+                     id="id_phone" 
+                     name="phone" 
+                     class="form-control" 
+                     placeholder="+998 90 123 45 67" 
+                     required>
+              <div class="form-feedback">To'g'ri telefon raqam kiriting.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="id_email">Elektron pochta</label>
+              <input type="email" 
+                     id="id_email" 
+                     name="email" 
+                     class="form-control" 
+                     placeholder="pochta@example.com">
+              <div class="form-feedback">To'g'ri elektron pochta kiriting.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_contact_type">Murojaat turi *</label>
+            <select id="id_contact_type" name="contact_type" class="form-control" required>
+              <option value="">Tanlang...</option>
+              <option value="admission">O'quvchi qabuli bo'yicha</option>
+              <option value="inquiry">Umumiy ma'lumot</option>
+              <option value="suggestion">Taklif yoki mulohaza</option>
+              <option value="complaint">Ariza / shikoyat</option>
+            </select>
+            <div class="form-feedback">Iltimos, murojaat turini tanlang.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_subject">Mavzu *</label>
+            <input type="text" 
+                   id="id_subject" 
+                   name="subject" 
+                   class="form-control" 
+                   placeholder="Murojaat mazmuni qisqacha" 
+                   required>
+            <div class="form-feedback">Mavzuni kiritish majburiy.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="id_message">Xabaringiz *</label>
+            <textarea id="id_message" 
+                      name="message" 
+                      rows="5" 
+                      class="form-control" 
+                      placeholder="Savol yoki taklifingizni batafsil yozing..." 
+                      required></textarea>
+            <div class="form-feedback">Iltimos, xabaringizni yozing.</div>
+          </div>
+
+          <div class="form-checkbox-wrap">
+            <input type="checkbox" id="id_privacy" name="privacy" class="form-checkbox" required>
+            <label for="id_privacy" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+              Shaxsiy ma'lumotlarim qayta ishlanishiga roziman
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            <span>Xabarni jo'natish</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MAP EMBED / PLACEHOLDER -->
+    <div class="map-placeholder">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2995.5!2d69.28!3d41.32!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE5JzEyLjAiTiA2OcKwMTYnNDguMCJF!5e0!3m2!1suz!2suz!4v1600000000000!5m2!1suz!2suz" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade" 
+              title="Maktab xaritadagi joylashuvi"></iframe>
+    </div>
+  </div>
+</section>
+{% endblock %}

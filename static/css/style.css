@@ -1,0 +1,690 @@
+/* 19-Maktab Custom Styles */
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --secondary: #06B6D4;
+  --accent: #FACC15;
+  --dark: #1F2937;
+  --light: #F9FAFB;
+  --card-bg: #FFFFFF;
+  --border-color: #E5E7EB;
+  --text-muted: #6B7280;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #1f2937;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main {
+  flex: 1;
+}
+
+/* Clean Minimal Header */
+.main-header {
+  background: #ffffff;
+  border-bottom: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.brand-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary, #4F46E5), var(--secondary, #06B6D4));
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: #0F172A;
+}
+
+.navbar-nav {
+  gap: 0.25rem;
+}
+
+.navbar-nav .nav-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #475569 !important;
+  padding: 0.4rem 0.75rem !important;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--primary, #4F46E5) !important;
+  background-color: #F1F5F9;
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--primary, #4F46E5) !important;
+  font-weight: 600;
+  background-color: #EEF2FF;
+}
+
+.lang-select {
+  width: 65px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border-color: #CBD5E1;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.btn-theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #CBD5E1;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+
+.btn-theme-toggle:hover {
+  background: #F1F5F9;
+  color: var(--primary, #4F46E5);
+}
+
+/* Dark mode overrides for navbar */
+[data-theme='dark'] .main-header {
+  background: #0B1020;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .brand-name {
+  color: #F8FAFC;
+}
+
+[data-theme='dark'] .navbar-nav .nav-link {
+  color: #94A3B8 !important;
+}
+
+[data-theme='dark'] .navbar-nav .nav-link:hover,
+[data-theme='dark'] .navbar-nav .nav-link.active {
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .lang-select,
+[data-theme='dark'] .btn-theme-toggle {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #E2E8F0;
+  background-color: #151D32;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.95), rgba(6, 182, 212, 0.9)), url('../images/hero-bg.jpg') center/cover no-repeat;
+  color: #ffffff;
+  padding: 5rem 0;
+  position: relative;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.92;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border-bottom: 4px solid var(--primary);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 0.5rem;
+}
+
+.stat-title {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Cards */
+.school-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid var(--border-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.school-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-wrapper {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f3f4f6;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.school-card:hover .card-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Teacher Avatar */
+.teacher-avatar-wrapper {
+  width: 110px;
+  height: 110px;
+  margin: 1.5rem auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #EEF2FF;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teacher-avatar-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badges */
+.badge-category {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Footer */
+footer {
+  background: #111827;
+  color: #9CA3AF;
+  padding: 3.5rem 0 1.5rem;
+  margin-top: 4rem;
+}
+
+footer a {
+  color: #D1D5DB;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+footer a:hover {
+  color: #FFFFFF;
+}
+
+footer .footer-title {
+  color: #FFFFFF;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  font-size: 1.1rem;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 3rem;
+  margin-bottom: 2.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: -2.5rem;
+  width: 2px;
+  background: #E5E7EB;
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 4px solid #EEF2FF;
+}
+
+.timeline-year {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   SMOOTH SCROLLING & SCROLL OFFSET FOR ANCHOR LINKS
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 85px;
+}
+
+/* ==========================================================================
+   ULTRA-RESPONSIVE COMPACT PHONE DESIGN (≤ 768px and ≤ 480px)
+   Kichik va ixcham, telefonda katta bo'lib ketmaydigan zamonaviy UI
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    margin-top: 0.75rem;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.12);
+    border: 1px solid rgba(79, 70, 229, 0.1);
+  }
+  .navbar-nav .nav-link {
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 600;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+  }
+  .navbar-nav .nav-link:hover,
+  .navbar-nav .nav-link.active {
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--primary) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Sections global padding */
+  .py-5 {
+    padding-top: 1.85rem !important;
+    padding-bottom: 1.85rem !important;
+  }
+  .py-4 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  /* Typography scale down */
+  .hero-section {
+    padding: 2.25rem 0 !important;
+  }
+  .hero-title {
+    font-size: 1.55rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .hero-subtitle {
+    font-size: 0.85rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 1.25rem !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Buttons */
+  .btn-lg {
+    padding: 0.45rem 1.1rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 50px !important;
+  }
+  .btn {
+    padding: 0.38rem 0.9rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 50px !important;
+  }
+  .btn-sm {
+    padding: 0.28rem 0.75rem !important;
+    font-size: 0.73rem !important;
+  }
+
+  /* Stats */
+  .stat-card {
+    padding: 0.75rem 0.5rem !important;
+    border-radius: 10px !important;
+    border-bottom-width: 3px !important;
+  }
+  .stat-value {
+    font-size: 1.35rem !important;
+    margin-top: 0.25rem !important;
+  }
+  .stat-title {
+    font-size: 0.7rem !important;
+  }
+  .stat-card i {
+    font-size: 1.25rem !important;
+  }
+
+  /* School Cards & Images */
+  .school-card {
+    border-radius: 10px !important;
+  }
+  .card-img-wrapper {
+    height: 130px !important;
+  }
+  .card-body {
+    padding: 0.85rem !important;
+  }
+  .school-card h5 {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+  }
+  .school-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Section Headers */
+  .section-title {
+    font-size: 1.2rem !important;
+  }
+  .section-label {
+    font-size: 0.68rem !important;
+  }
+
+  /* Teacher Avatar */
+  .teacher-avatar-wrapper {
+    width: 65px !important;
+    height: 65px !important;
+    margin: 0.75rem auto 0.5rem !important;
+  }
+
+  /* Director Card */
+  .director-card {
+    padding: 1.25rem 1rem !important;
+    border-radius: 14px !important;
+  }
+  .director-photo,
+  .director-photo-placeholder {
+    width: 85px !important;
+    height: 85px !important;
+  }
+  .director-quote-mark {
+    font-size: 2.8rem !important;
+  }
+  .director-message-text {
+    font-size: 0.82rem !important;
+    line-height: 1.55 !important;
+  }
+
+  /* Spotlight Card (Best Student & Best Teacher) */
+  .spotlight-card {
+    padding: 1.15rem 0.9rem !important;
+    border-radius: 14px !important;
+    gap: 1rem !important;
+  }
+  .spotlight-badge-circle {
+    width: 85px !important;
+    height: 85px !important;
+    font-size: 2rem !important;
+  }
+  .spotlight-name {
+    font-size: 1.05rem !important;
+  }
+  .spotlight-achievement {
+    font-size: 0.85rem !important;
+  }
+  .trophy-badge {
+    font-size: 0.68rem !important;
+    padding: 0.2rem 0.7rem !important;
+  }
+  .spotlight-type-badge {
+    font-size: 0.68rem !important;
+    padding: 0.25rem 0.75rem !important;
+  }
+
+  /* News Mini Cards */
+  .news-mini-img {
+    height: 110px !important;
+  }
+  .news-mini-body {
+    padding: 0.75rem !important;
+  }
+  .news-mini-title {
+    font-size: 0.82rem !important;
+  }
+  .news-mini-excerpt {
+    font-size: 0.72rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Navbar Brand */
+  .navbar-brand {
+    font-size: 1.05rem !important;
+  }
+  .navbar-brand span.rounded-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Footer */
+  footer {
+    padding: 2rem 0 1rem !important;
+    margin-top: 2rem !important;
+  }
+  footer .footer-title {
+    font-size: 0.88rem !important;
+    margin-bottom: 0.65rem !important;
+  }
+  footer ul, footer p {
+    font-size: 0.73rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra compact styling for small smartphones */
+  .container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  .hero-title {
+    font-size: 1.35rem !important;
+  }
+  .stat-value {
+    font-size: 1.15rem !important;
+  }
+  .stat-card {
+    padding: 0.6rem 0.35rem !important;
+  }
+  .stat-title {
+    font-size: 0.65rem !important;
+  }
+  .school-emblem {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 1.75rem !important;
+  }
+  .mini-info-card {
+    padding: 0.5rem 0.35rem !important;
+  }
+  .mini-info-card i {
+    font-size: 0.9rem !important;
+  }
+  .mini-info-card span {
+    font-size: 0.65rem !important;
+  }
+  .mobile-quick-chip {
+    padding: 0.3rem 0.65rem !important;
+    font-size: 0.68rem !important;
+  }
+}
+
+/* ==========================================================================
+   CLEAN TYPOGRAPHY COLORS (Natural, sharp, highly legible)
+   ========================================================================== */
+body {
+  color: #0F172A !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #0F172A;
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+p, span, li {
+  color: #334155;
+}
+
+.text-muted {
+  color: #64748B !important;
+}
+
+/* ==========================================================================
+   UNIVERSAL COMPLETE DARK MODE (Light/Dark 100% working)
+   ========================================================================== */
+[data-theme='dark'] body {
+  background-color: #0B1120 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] .main-header {
+  background-color: #0F172A !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme='dark'] .brand-name {
+  color: #FFFFFF !important;
+}
+
+[data-theme='dark'] .navbar-nav .nav-link {
+  color: #CBD5E1 !important;
+}
+
+[data-theme='dark'] .navbar-nav .nav-link:hover,
+[data-theme='dark'] .navbar-nav .nav-link.active {
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme='dark'] .lang-select,
+[data-theme='dark'] .btn-theme-toggle {
+  background-color: #1E293B !important;
+  color: #F8FAFC !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme='dark'] h1, 
+[data-theme='dark'] h2, 
+[data-theme='dark'] h3, 
+[data-theme='dark'] h4, 
+[data-theme='dark'] h5, 
+[data-theme='dark'] h6 {
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] p, 
+[data-theme='dark'] span:not(.badge), 
+[data-theme='dark'] li {
+  color: #CBD5E1 !important;
+}
+
+[data-theme='dark'] .text-muted {
+  color: #94A3B8 !important;
+}
+
+[data-theme='dark'] .text-dark {
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] .bg-white {
+  background-color: #111827 !important;
+}
+
+[data-theme='dark'] section[style*="background:#F8FAFC"],
+[data-theme='dark'] section[style*="background: #F8FAFC"],
+[data-theme='dark'] .bg-light {
+  background-color: #0B1120 !important;
+}
+
+[data-theme='dark'] .stat-card,
+[data-theme='dark'] .school-card,
+[data-theme='dark'] .director-card,
+[data-theme='dark'] .spotlight-card,
+[data-theme='dark'] .gallery-card,
+[data-theme='dark'] .teacher-mini-card,
+[data-theme='dark'] .achievement-mini-card,
+[data-theme='dark'] .card {
+  background-color: #1E293B !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme='dark'] .border,
+[data-theme='dark'] .border-top,
+[data-theme='dark'] .border-bottom {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme='dark'] .director-quote-mark {
+  color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme='dark'] footer {
+  background-color: #050811 !important;
+}
+
+

@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Bosh sahifa" %}{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════════════ -->
+<section class="hero-section" id="home">
+  <div class="container py-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <span class="badge px-3 py-2 rounded-pill mb-3"
+              style="background:linear-gradient(135deg,#FACC15,#F59E0B);color:#111827;font-weight:700;font-size:.75rem;">
+          <i class="fas fa-star me-1"></i> {% trans "Zamonaviy ta'lim dargohi" %}
+        </span>
+        <h1 class="hero-title mb-3">
+          Kelajak sari<br><span style="background:linear-gradient(135deg,#FACC15,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">bilim bilan!</span>
+        </h1>
+        <p class="hero-subtitle mb-4">
+          {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yorqin kelajak poydevori!" }}
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{% url 'about' %}" class="btn btn-light fw-semibold text-primary px-4 py-2">
+            <i class="fas fa-info-circle me-1"></i> {% trans "Maktab haqida" %}
+          </a>
+          <a href="{% url 'news:list' %}" class="btn btn-outline-light fw-semibold px-4 py-2">
+            <i class="fas fa-newspaper me-1"></i> {% trans "Yangiliklar" %}
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-5 text-center">
+        {% if site_settings.hero_image %}
+          <img src="{{ site_settings.hero_image.url }}" alt="School Hero"
+               class="img-fluid rounded-4 shadow-lg border border-3 border-white" style="max-height:360px;object-fit:cover;">
+        {% else %}
+          <div class="p-4 rounded-4 shadow-lg bg-white text-dark text-center">
+            <i class="fas fa-school text-primary fa-4x mb-3"></i>
+            <h4 class="fw-bold fs-5">{{ site_settings.localized_name|default:"19-Maktab" }}</h4>
+            <p class="text-muted small mb-0">{% trans "Bilim va yuksak marralar maskani" %}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATISTICS
+═══════════════════════════════════════════════════════════ -->
+{% if statistics %}
+<section class="py-4" style="margin-top:-2rem;" id="statistika">
+  <div class="container">
+    <div class="row g-3">
+      {% for stat in statistics %}
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <i class="fas {{ stat.icon|default:'fa-users' }} fa-2x text-primary mb-2"></i>
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-title">{{ stat.localized_title }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     BIZNING MAKTAB  (anchor target)
+═══════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-white border-top" id="bizning-maktab">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <!-- Icon / emblem -->
+      <div class="col-md-4 text-center">
+        <div class="school-emblem-wrap">
+          <div class="school-emblem">
+            <i class="fas fa-school"></i>
+          </div>
+          <div class="mt-3">
+            <span class="badge rounded-pill px-3 py-2"
+                  style="background:linear-gradient(135deg,#4F46E5,#06B6D4);color:#fff;font-size:.8rem;">
+              <i class="fas fa-map-marker-alt me-1"></i> Toshkent
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Info -->
+      <div class="col-md-8">
+        <div class="section-label">🏫 Bizning maktab</div>
+        <h2 class="section-title">{{ site_settings.localized_name|default:"19-umumiy o'rta ta'lim maktabi" }}</h2>
+        <p class="text-muted mb-4" style="line-height:1.8;">
+          {{ site_settings.localized_about|default:"19-umumiy o'rta ta'lim maktabi zamonaviy ta'lim standartlariga mos, yuksak ma'naviyatli, chuqur bilimli yoshlarni tarbiyalashni o'z oldiga maqsad qilib qo'ygan. Maktabimizda barcha zamonaviy sharoitlar, fan laboratoriyalari, sport zallari va zamonaviy axborot texnologiyalari bilan jihozlangan sinfxonalar mavjud." }}
+        </p>
+        <!-- Mini info cards row -->
+        <div class="row g-2">
+          <div class="col-6 col-sm-3">
+            <div class="mini-info-card" style="--mc:var(--royal-blue)">
+              <i class="fas fa-phone"></i>
+              <span>{{ site_settings.phone|default:"+998 71 200-19-19" }}</span>
+            </div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="mini-info-card" style="--mc:var(--electric-cyan)">
+              <i class="fas fa-envelope"></i>
+              <span>{{ site_settings.email|default:"info@maktab19.uz" }}</span>
+            </div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="mini-info-card" style="--mc:#10B981">
+              <i class="fas fa-clock"></i>
+              <span>{{ site_settings.working_hours|default:"08:00–18:00" }}</span>
+            </div>
+          </div>
+          <div class="col-6 col-sm-3">
+            <div class="mini-info-card" style="--mc:#8B5CF6">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ site_settings.localized_address|default:"Chilonzor tumani" }}</span>
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'about' %}" class="btn mt-4"
+           style="background:linear-gradient(135deg,#4F46E5,#06B6D4);color:#fff;border-radius:50px;padding:.55rem 1.8rem;font-weight:600;">
+          Batafsil <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BIZNING DIREKTOR  (anchor target)
+═══════════════════════════════════════════════════════════ -->
+{% if site_settings.director_name %}
+<section class="py-5 border-top" id="bizning-direktor" style="background: #F8FAFC;">
+  <div class="container">
+    <div class="text-center mb-4">
+      <div class="section-label">👨‍💼 Bizning direktor</div>
+      <h2 class="section-title">Rahbariyat murojaati</h2>
+    </div>
+    <div class="director-card">
+      <div class="director-photo-col">
+        {% if site_settings.director_photo %}
+          <img src="{{ site_settings.director_photo.url }}"
+               alt="{{ site_settings.director_name }}" class="director-photo">
+        {% else %}
+          <div class="director-photo-placeholder">
+            <i class="fas fa-user-tie"></i>
+          </div>
+        {% endif %}
+        <div class="mt-3 text-center">
+          <h5 class="fw-bold mb-0 fs-6">{{ site_settings.director_name }}</h5>
+          <p class="text-muted small mb-2">Maktab direktori</p>
+          <span class="badge rounded-pill px-3"
+                style="background:linear-gradient(135deg,#4F46E5,#06B6D4);color:#fff;font-size:.73rem;">
+            <i class="fas fa-star me-1"></i> Rahbar
+          </span>
+        </div>
+      </div>
+      <div class="director-message-col">
+        <div class="director-quote-mark">"</div>
+        <p class="director-message-text">
+          {{ site_settings.director_message|default:"Hurmatli ota-onalar va aziz o'quvchilar! Bizning 19-maktabimiz har bir bolaning iqtidori va qobiliyatini yuzaga chiqarish uchun barcha imkoniyatlarni yaratadi. Sifatli ta'lim, zamonaviy sharoitlar va jonkuyar pedagoglar jamoasi — bularning barchasi farzandlaringiz yorqin kelajagi uchun xizmat qiladi." }}
+        </p>
+        <div class="director-signature">
+          <span>— {{ site_settings.director_name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     ENG SO'NGGI YANGILIKLAR  (anchor target)
+═══════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-white border-top" id="eng-yangiliklar">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+      <div>
+        <div class="section-label">📰 Eng so'nggi yangiliklar</div>
+        <h2 class="section-title mb-0">Maktab yangiliklari</h2>
+      </div>
+      <a href="{% url 'news:list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+        Barchasini ko'rish <i class="fas fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    {% if carousel_news %}
+    <!-- Interactive Featured News Carousel -->
+    <div id="schoolNewsCarousel" class="carousel slide mb-4 shadow rounded-4 overflow-hidden position-relative" data-bs-ride="carousel" data-bs-interval="4500">
+      <!-- Indicators -->
+      <div class="carousel-indicators mb-2">
+        {% for item in carousel_news %}
+          <button type="button" data-bs-target="#schoolNewsCarousel" data-bs-slide-to="{{ forloop.counter0 }}" 
+                  class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}" 
+                  aria-label="Slayd {{ forloop.counter }}"></button>
+        {% endfor %}
+      </div>
+
+      <!-- Carousel Items -->
+      <div class="carousel-inner">
+        {% for item in carousel_news %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="p-3 p-md-5 text-white position-relative" 
+               style="min-height: 220px; background: linear-gradient(135deg, rgba(30, 27, 75, 0.92) 0%, rgba(79, 70, 229, 0.85) 100%); display: flex; flex-direction: column; justify-content: center;">
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+              {% if item.category %}
+                <span class="badge rounded-pill px-3 py-1" style="background-color: {{ item.category.color }}; font-size: 0.72rem;">
+                  {{ item.category.localized_name }}
+                </span>
+              {% endif %}
+              <small class="opacity-75" style="font-size: 0.72rem;">
+                <i class="far fa-calendar-alt me-1"></i> {{ item.published_at|date:"d.m.Y" }}
+              </small>
+              <small class="opacity-75 ms-auto" style="font-size: 0.72rem;">
+                <i class="far fa-eye me-1"></i> {{ item.views_count }} {% trans "ko'rildi" %}
+              </small>
+            </div>
+            <h3 class="fw-bold mb-2 text-white" style="font-size: clamp(1rem, 2.5vw, 1.5rem); line-height: 1.3;">
+              {{ item.localized_title }}
+            </h3>
+            <p class="opacity-90 mb-3 small d-none d-sm-block" style="max-width: 650px; font-size: 0.82rem; line-height: 1.5;">
+              {{ item.localized_excerpt|truncatechars:120 }}
+            </p>
+            <div>
+              <a href="{{ item.get_absolute_url }}" class="btn btn-warning btn-sm rounded-pill fw-bold px-3 py-1 text-dark" style="font-size: 0.75rem;">
+                {% trans "Batafsil o'qish" %} <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#schoolNewsCarousel" data-bs-slide="prev" aria-label="Oldingi">
+        <span class="carousel-control-prev-icon p-2 rounded-circle" style="background-color: rgba(0,0,0,0.35); width: 28px; height: 28px;" aria-hidden="true"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#schoolNewsCarousel" data-bs-slide="next" aria-label="Keyingi">
+        <span class="carousel-control-next-icon p-2 rounded-circle" style="background-color: rgba(0,0,0,0.35); width: 28px; height: 28px;" aria-hidden="true"></span>
+      </button>
+    </div>
+    {% endif %}
+
+    <!-- News Grid Cards -->
+    <div class="row g-3">
+      {% if latest_news %}
+        {% for item in latest_news %}
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="news-mini-card">
+            <div class="news-mini-img">
+              {% if item.cover_image %}
+                <img src="{{ item.cover_image.url }}" alt="{{ item.localized_title }}" loading="lazy">
+              {% else %}
+                <div class="news-mini-img-placeholder"><i class="fas fa-newspaper"></i></div>
+              {% endif %}
+              {% if item.category %}
+              <span class="news-mini-badge" style="background:{{ item.category.color }}">
+                {{ item.category.localized_name }}
+              </span>
+              {% endif %}
+            </div>
+            <div class="news-mini-body">
+              <time class="news-mini-date">
+                <i class="far fa-calendar-alt"></i> {{ item.published_at|date:"d.m.Y" }}
+              </time>
+              <h6 class="news-mini-title">
+                <a href="{{ item.get_absolute_url }}">{{ item.localized_title|truncatechars:65 }}</a>
+              </h6>
+              <p class="news-mini-excerpt">{{ item.localized_excerpt|truncatechars:90 }}</p>
+              <a href="{{ item.get_absolute_url }}" class="news-mini-more">
+                O'qish <i class="fas fa-chevron-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="col-12 text-center py-4">
+        <div class="empty-state-mini">
+          <i class="fas fa-newspaper fa-3x mb-3" style="color:#CBD5E1;"></i>
+          <p class="text-muted mb-0">Hozircha yangiliklar joylanmagan</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ENG YAXSHI O'QUVCHI  (anchor target)
+═══════════════════════════════════════════════════════════ -->
+<section class="py-5 border-top" id="eng-yaxshi-oquvchi" style="background: #F8FAFC;">
+  <div class="container">
+    <div class="text-center mb-4">
+      <div class="section-label">⭐ Faxrimiz</div>
+      <h2 class="section-title">Eng yaxshi o'quvchi</h2>
+      <p class="text-muted small">Maktabimiz faxri bo'lgan iqtidorli o'quvchi</p>
+    </div>
+
+    {% if best_student %}
+    <div class="spotlight-card student-spotlight">
+      <div class="spotlight-icon-col">
+        <div class="spotlight-badge-circle" style="background:linear-gradient(135deg,#FACC15,#F59E0B)">
+          {% if best_student.photo and best_student.parent_consent %}
+            <img src="{{ best_student.photo.url }}" alt="{{ best_student.student_name }}"
+                 class="spotlight-photo">
+          {% else %}
+            <i class="fas fa-user-graduate"></i>
+          {% endif %}
+        </div>
+        <div class="text-center mt-3">
+          <span class="trophy-badge">🏆 {{ best_student.place|default:"Yutuqchi" }}</span>
+        </div>
+      </div>
+      <div class="spotlight-info-col">
+        <div class="spotlight-type-badge" style="background:linear-gradient(135deg,#FACC15,#F59E0B);color:#111;">
+          <i class="fas fa-medal me-1"></i> {{ best_student.get_achievement_type_display }}
+        </div>
+        <h3 class="spotlight-name">{{ best_student.student_name }}{% if best_student.grade %} <span class="grade-badge">{{ best_student.grade }}-sinf</span>{% endif %}</h3>
+        <p class="spotlight-achievement">{{ best_student.localized_title }}</p>
+        {% if best_student.description %}
+        <p class="text-muted small mb-3">{{ best_student.description|truncatechars:180 }}</p>
+        {% endif %}
+        <div class="spotlight-meta">
+          <span><i class="far fa-calendar-alt me-1"></i> {{ best_student.date|date:"d.m.Y" }}</span>
+          {% if best_student.place %}<span><i class="fas fa-trophy me-1 text-warning"></i> {{ best_student.place }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <div class="empty-state-mini">
+        <i class="fas fa-user-graduate fa-3x mb-3" style="color:#FDE68A;"></i>
+        <p class="text-muted mb-0">O'quvchi yutuqlari hali qo'shilmagan</p>
+        <p class="text-muted small">Admin paneldan qo'shing</p>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if recent_achievements %}
+    <div class="row g-3 mt-3">
+      {% for item in recent_achievements %}
+      <div class="col-6 col-md-3">
+        <div class="achievement-mini-card">
+          <div class="ach-icon ach-{{ item.achievement_type }}">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="ach-info">
+            <span class="ach-type">{{ item.get_achievement_type_display }}</span>
+            <h6 class="ach-name">{{ item.student_name }}</h6>
+            <p class="ach-title">{{ item.localized_title|truncatechars:50 }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ENG YAXSHI O'QITUVCHI  (anchor target)
+═══════════════════════════════════════════════════════════ -->
+<section class="py-5 bg-white border-top" id="eng-yaxshi-oqituvchi">
+  <div class="container">
+    <div class="text-center mb-4">
+      <div class="section-label">👩‍🏫 Faxrimiz</div>
+      <h2 class="section-title">Eng yaxshi o'qituvchi</h2>
+      <p class="text-muted small">Ko'p yillik tajriba va fidokorlik namunasi</p>
+    </div>
+
+    {% if best_teacher %}
+    <div class="spotlight-card teacher-spotlight">
+      <div class="spotlight-icon-col">
+        <div class="spotlight-badge-circle" style="background:linear-gradient(135deg,#8B5CF6,#4F46E5)">
+          {% if best_teacher.photo %}
+            <img src="{{ best_teacher.photo.url }}" alt="{{ best_teacher.full_name }}" class="spotlight-photo">
+          {% else %}
+            <i class="fas fa-chalkboard-teacher"></i>
+          {% endif %}
+        </div>
+        <div class="text-center mt-3">
+          <span class="trophy-badge" style="background:linear-gradient(135deg,#8B5CF6,#4F46E5)">
+            🎓 {{ best_teacher.experience_years }}+ yil
+          </span>
+        </div>
+      </div>
+      <div class="spotlight-info-col">
+        <div class="spotlight-type-badge" style="background:linear-gradient(135deg,#8B5CF6,#4F46E5)">
+          <i class="fas fa-award me-1"></i> {{ best_teacher.localized_position }}
+        </div>
+        <h3 class="spotlight-name">{{ best_teacher.full_name }}</h3>
+        <p class="spotlight-achievement">{{ best_teacher.localized_subject }}</p>
+        {% if best_teacher.localized_bio %}
+        <p class="text-muted small mb-3">{{ best_teacher.localized_bio|truncatechars:200 }}</p>
+        {% endif %}
+        <div class="spotlight-meta">
+          <span><i class="fas fa-briefcase me-1"></i> {{ best_teacher.experience_years }}+ yil tajriba</span>
+          {% if best_teacher.education %}
+          <span><i class="fas fa-university me-1"></i> {{ best_teacher.education|truncatechars:40 }}</span>
+          {% endif %}
+        </div>
+        <a href="{{ best_teacher.get_absolute_url }}" class="btn mt-3"
+           style="background:linear-gradient(135deg,#8B5CF6,#4F46E5);color:#fff;border-radius:50px;padding:.5rem 1.6rem;font-weight:600;font-size:.85rem;">
+          Profilni ko'rish <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <div class="empty-state-mini">
+        <i class="fas fa-chalkboard-teacher fa-3x mb-3" style="color:#C4B5FD;"></i>
+        <p class="text-muted mb-0">O'qituvchilar hali qo'shilmagan</p>
+        <p class="text-muted small">Admin paneldan qo'shing</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Featured teachers grid -->
+    {% if featured_teachers %}
+    <div class="d-flex justify-content-between align-items-center mt-5 mb-3 flex-wrap gap-2">
+      <h5 class="fw-bold mb-0">Yetakchi ustozlarimiz</h5>
+      <a href="{% url 'teachers:list' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+        Barcha ustozlar <i class="fas fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+    <div class="row g-3">
+      {% for teacher in featured_teachers %}
+      <div class="col-6 col-md-3">
+        <div class="teacher-mini-card text-center">
+          <div class="teacher-mini-avatar">
+            {% if teacher.photo %}
+              <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}">
+            {% else %}
+              <i class="fas fa-user text-secondary fa-2x"></i>
+            {% endif %}
+          </div>
+          <h6 class="teacher-mini-name">
+            <a href="{{ teacher.get_absolute_url }}">{{ teacher.full_name }}</a>
+          </h6>
+          <p class="teacher-mini-subject">{{ teacher.localized_subject }}</p>
+          <p class="teacher-mini-pos">{{ teacher.localized_position }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Gallery Preview -->
+{% if gallery_preview %}
+<section class="py-4 border-top" style="background:#F7F8FF;" id="galereya">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <h5 class="fw-bold mb-0">📷 Fotogalereya</h5>
+      <a href="{% url 'gallery' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+        To'liq <i class="fas fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+    <div class="row g-2">
+      {% for img in gallery_preview %}
+      <div class="col-4 col-md-2">
+        <div class="rounded-3 overflow-hidden" style="height:90px;">
+          <img src="{{ img.image.url }}" alt="{{ img.title }}"
+               class="w-100 h-100" style="object-fit:cover;">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

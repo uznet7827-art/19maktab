@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}O'qituvchilar jamoasi — {{ site_settings.name|default:"19-maktab" }}{% endblock %}
+
+{% block content %}
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <div class="container">
+    <span class="section-subtitle">Fidoyi va tajribali ustozlarimiz</span>
+    <h1 class="page-title">Pedagogik Jamoamiz</h1>
+    <p class="page-desc">
+      Maktabimizda o'z kasbining mohir ustalari, yuksak malakali va o'quvchilarga chuqur bilim ulashuvchi o'qituvchilar faoliyat yuritadi.
+    </p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 2rem;">
+  <div class="container">
+    <!-- SEARCH & DEPARTMENT FILTER -->
+    <div class="news-filter-bar">
+      <form method="GET" action="{% url 'teachers:list' %}" class="news-search-box">
+        <i class="fas fa-search news-search-icon"></i>
+        <input type="text" 
+               name="q" 
+               value="{{ search_query|default:'' }}" 
+               class="news-search-input" 
+               placeholder="O'qituvchi ism-familiyasi bo'yicha qidiruv..." 
+               aria-label="Ustozlarni qidirish">
+        {% if selected_department %}
+        <input type="hidden" name="department" value="{{ selected_department }}">
+        {% endif %}
+      </form>
+
+      <!-- Department filter chips -->
+      {% if departments %}
+      <div class="filter-chips">
+        <a href="{% url 'teachers:list' %}{% if search_query %}?q={{ search_query }}{% endif %}" 
+           class="filter-chip {% if not selected_department %}active{% endif %}">
+          Barcha kafedralar
+        </a>
+        {% for dept in departments %}
+        <a href="{% url 'teachers:list' %}?department={{ dept.slug }}{% if search_query %}&q={{ search_query }}{% endif %}" 
+           class="filter-chip {% if selected_department == dept.slug %}active{% endif %}">
+          {{ dept.name }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- TEACHERS GRID -->
+    <div class="teachers-grid">
+      {% for teacher in teachers %}
+      <div class="teacher-card">
+        <div class="teacher-photo-wrap">
+          {% if teacher.photo %}
+          <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}" class="teacher-photo" loading="lazy">
+          {% else %}
+          <div class="teacher-photo-placeholder">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          {% endif %}
+        </div>
+        <div class="teacher-info">
+          <h3>{{ teacher.full_name }}</h3>
+          <span class="teacher-subject">{{ teacher.subject }}</span>
+          <p class="teacher-position">{{ teacher.position|default:"O'qituvchi" }}</p>
+          <a href="{% url 'teachers:detail' teacher.pk %}" class="btn btn-sm btn-outline">
+            Batafsil ma'lumot
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="carousel-empty" style="grid-column: 1 / -1;">
+        <i class="fas fa-user-slash"></i>
+        <h3>O'qituvchi topilmadi</h3>
+        <p>Qidiruv so'zini o'zgartiring yoki filtrlarni tozalang.</p>
+        <a href="{% url 'teachers:list' %}" class="btn btn-outline btn-sm" style="margin-top: 1.5rem;">
+          Barcha o'qituvchilarni ko'rsatish
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- PAGINATION -->
+    {% if page_obj.has_other_pages %}
+    <nav class="pagination" aria-label="Sahifalar">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_department %}&department={{ selected_department }}{% endif %}" 
+         class="page-item" aria-label="Oldingi">
+        <i class="fas fa-chevron-left"></i>
+      </a>
+      {% endif %}
+
+      {% for p in page_obj.paginator.page_range %}
+        {% if page_obj.number == p %}
+        <span class="page-item active">{{ p }}</span>
+        {% elif p > page_obj.number|add:'-3' and p < page_obj.number|add:'3' %}
+        <a href="?page={{ p }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_department %}&department={{ selected_department }}{% endif %}" 
+           class="page-item">{{ p }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_department %}&department={{ selected_department }}{% endif %}" 
+         class="page-item" aria-label="Keyingi">
+        <i class="fas fa-chevron-right"></i>
+      </a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

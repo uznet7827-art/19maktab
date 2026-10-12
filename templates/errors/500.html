@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Server xatosi (500) — 19-maktab{% endblock %}
+
+{% block content %}
+<section class="error-page">
+  <div class="container">
+    <div class="error-content" style="margin: 0 auto;">
+      <div class="error-code">500</div>
+      <h1 class="error-title">Serverda ichki xatolik yuz berdi</h1>
+      <p class="error-desc">
+        Kechirasiz, tizimda vaqtinchalik nosozlik kuzatildi. Bizning muhandislarimiz bu muammoni bartaraf etish ustida ishlamoqda.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+          <i class="fas fa-home"></i> Bosh sahifaga qaytish
+        </a>
+        <a href="{% url 'contacts:contact' %}" class="btn btn-outline btn-lg">
+          <i class="fas fa-envelope"></i> Ma'muriyat bilan bog'lanish
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

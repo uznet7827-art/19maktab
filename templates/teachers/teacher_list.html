@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "O'qituvchilar" %}{% endblock %}
+
+{% block content %}
+<div class="bg-light py-5 border-bottom">
+    <div class="container text-center">
+        <h1 class="fw-bold mb-2">{% trans "Maktabimiz pedagogik jamoasi" %}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Bosh sahifa" %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "O'qituvchilar" %}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="py-5">
+    <div class="container">
+        <!-- Search and Department Filters -->
+        <div class="row g-3 mb-5 align-items-center">
+            <div class="col-lg-7">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'teachers:list' %}" class="btn {% if not selected_department %}btn-primary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-pill px-3">
+                        {% trans "Barcha kafedralar" %}
+                    </a>
+                    {% for dept in departments %}
+                        <a href="{% url 'teachers:list' %}?department={{ dept.id }}" class="btn {% if selected_department == dept %}btn-primary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-pill px-3">
+                            {{ dept.localized_name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <form method="get" action="{% url 'teachers:list' %}" class="d-flex gap-2">
+                    {% if selected_department %}
+                        <input type="hidden" name="department" value="{{ selected_department.id }}">
+                    {% endif %}
+                    <input type="text" name="q" class="form-control form-control-sm rounded-pill px-3" placeholder="{% trans "Ustoz F.I.Sh yoki fani..." %}" value="{{ query }}">
+                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Teachers Grid -->
+        <div class="row g-4">
+            {% if teachers %}
+                {% for teacher in teachers %}
+                    <div class="col-sm-6 col-md-4 col-lg-3 text-center">
+                        <div class="school-card p-4">
+                            <div class="teacher-avatar-wrapper">
+                                {% if teacher.photo %}
+                                    <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}">
+                                {% else %}
+                                    <i class="fas fa-user text-secondary fa-2x"></i>
+                                {% endif %}
+                            </div>
+                            <h5 class="fw-bold mb-1 fs-6">
+                                <a href="{{ teacher.get_absolute_url }}" class="text-dark text-decoration-none">
+                                    {{ teacher.full_name }}
+                                </a>
+                            </h5>
+                            <p class="text-primary small fw-semibold mb-1">{{ teacher.localized_subject }}</p>
+                            <p class="text-muted small mb-2">{{ teacher.localized_position }}</p>
+                            {% if teacher.experience_years %}
+                                <div class="badge bg-light text-secondary mb-3">
+                                    <i class="fas fa-briefcase me-1"></i> {{ teacher.experience_years }} {% trans "yil staj" %}
+                                </div>
+                            {% endif %}
+                            <div class="mt-auto">
+                                <a href="{{ teacher.get_absolute_url }}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">
+                                    {% trans "Profilni ko'rish" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-chalkboard-teacher fa-4x text-muted mb-3"></i>
+                    <p class="text-muted">{% trans "Hech qanday o'qituvchi topilmadi." %}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

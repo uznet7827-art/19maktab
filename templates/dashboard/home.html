@@ -1,0 +1,150 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Asosiy Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Maktab Nazorat Markazi</h4>
+        <small class="text-muted">Umumiy ko'rsatkichlar va yangilanishlar</small>
+    </div>
+    <div class="d-none d-sm-block">
+        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">
+            <i class="fas fa-check-circle me-1"></i> Tizim faol
+        </span>
+    </div>
+</div>
+
+<!-- 4 TA ASOSIY STATISTIKA KARTASI (Mobilda 2 ustun, kompyuterda 4) -->
+<div class="row g-2 g-md-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon" style="background: linear-gradient(135deg, #4F46E5, #3730A3);">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div>
+                <div class="stat-dash-num">{{ total_teachers }}</div>
+                <div class="stat-dash-label">Ustozlar</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon" style="background: linear-gradient(135deg, #06B6D4, #0891B2);">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <div>
+                <div class="stat-dash-num">{{ total_news }}</div>
+                <div class="stat-dash-label">Yangiliklar</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div>
+                <div class="stat-dash-num">{{ total_achievements }}</div>
+                <div class="stat-dash-label">Yutuqlar</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon" style="background: linear-gradient(135deg, #EF4444, #DC2626);">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <div>
+                <div class="stat-dash-num">{{ total_contacts }}</div>
+                <div class="stat-dash-label">Murojaatlar</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- RECENT CONTACTS -->
+    <div class="col-12 col-lg-7">
+        <div class="dash-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0 text-dark">
+                    <i class="fas fa-inbox text-primary me-1"></i> So'nggi murojaatlar
+                </h6>
+                <a href="{% url 'dashboard_contacts' %}" class="btn btn-sm btn-link text-decoration-none p-0 small">
+                    Barchasi &rarr;
+                </a>
+            </div>
+
+            {% if recent_contacts %}
+                <div class="d-flex flex-column gap-2">
+                    {% for item in recent_contacts %}
+                        <div class="p-2 p-md-3 rounded-3 bg-light border d-flex justify-content-between align-items-start gap-2">
+                            <div class="overflow-hidden">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <strong class="small text-dark">{{ item.full_name }}</strong>
+                                    <span class="badge-status status-{{ item.status }}">{{ item.get_status_display }}</span>
+                                </div>
+                                <p class="text-muted small mb-1 text-truncate" style="max-width: 320px;">
+                                    <strong>{{ item.subject }}:</strong> {{ item.message }}
+                                </p>
+                                <small class="text-secondary" style="font-size: 0.7rem;">
+                                    <i class="far fa-clock me-1"></i> {{ item.created_at|date:"d.m.Y H:i" }} | {{ item.phone|default:item.email }}
+                                </small>
+                            </div>
+                            <a href="{% url 'dashboard_contacts' %}?status={{ item.status }}" class="btn btn-sm btn-outline-primary py-0 px-2 rounded-pill" style="font-size: 0.72rem; white-space: nowrap;">
+                                Ko'rish
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted small mb-0 py-3 text-center">Hozircha yangi murojaatlar yo'q.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- RECENT NEWS & ACTIONS -->
+    <div class="col-12 col-lg-5">
+        <div class="dash-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0 text-dark">
+                    <i class="fas fa-newspaper text-info me-1"></i> So'nggi yangiliklar
+                </h6>
+                <a href="{% url 'dashboard_news' %}" class="btn btn-sm btn-link text-decoration-none p-0 small">
+                    Barchasi &rarr;
+                </a>
+            </div>
+
+            {% if recent_news %}
+                <div class="d-flex flex-column gap-2 mb-3">
+                    {% for n in recent_news %}
+                        <div class="d-flex align-items-center justify-content-between p-2 rounded-2 border bg-light">
+                            <div class="overflow-hidden me-2">
+                                <div class="small fw-semibold text-truncate text-dark">{{ n.title }}</div>
+                                <small class="text-muted" style="font-size: 0.7rem;">{{ n.published_at|date:"d.m.Y"|default:"Qoralama" }}</small>
+                            </div>
+                            <span class="badge {% if n.status == 'published' %}bg-success{% else %}bg-secondary{% endif %}" style="font-size: 0.65rem;">
+                                {{ n.get_status_display }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #EEF2FF, #E0E7FF);">
+                <h6 class="fw-bold mb-1 text-primary small">Tezkor Ma'lumot Qo'shish:</h6>
+                <p class="text-muted small mb-2" style="font-size: 0.75rem;">Yangi yangilik yoki ustoz qo'shish uchun quyidagi tugmalardan foydalaning:</p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/admin/news/news/add/" class="btn btn-sm btn-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;">
+                        + Yangilik
+                    </a>
+                    <a href="/admin/teachers/teacher/add/" class="btn btn-sm btn-outline-primary bg-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">
+                        + Ustoz
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

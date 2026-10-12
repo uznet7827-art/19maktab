@@ -1,0 +1,189 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_settings.localized_name|default:"19-Maktab" }}{% endblock %} | 19-Maktab</title>
+    
+    <!-- Google Fonts: Inter + Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Premium Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Bootstrap Override CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- SEO Meta -->
+    <meta name="description" content="{% block meta_description %}19-maktab — Toshkentdagi zamonaviy umumiy o'rta ta'lim maktabi{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}19-Maktab{% endblock %}">
+    <meta property="og:type" content="website">
+
+    <style>
+        :root {
+            --primary: {{ site_settings.primary_color|default:'#4F46E5' }};
+            --secondary: {{ site_settings.secondary_color|default:'#06B6D4' }};
+            --accent: {{ site_settings.accent_color|default:'#FACC15' }};
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+    {% csrf_token %}
+    <!-- Clean Minimalist Header -->
+    <header class="main-header sticky-top">
+        <nav class="navbar navbar-expand-lg py-2">
+            <div class="container">
+                <!-- Logo / Brand (Short & Clean) -->
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+                    <span class="brand-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </span>
+                    <span class="brand-name">19-Maktab</span>
+                </a>
+                
+                <!-- Mobile Toggle Button -->
+                <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars fs-5 text-dark"></i>
+                </button>
+
+                <!-- Navigation Links to Dedicated Full Pages -->
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' and not request.GET %}active{% endif %}" href="{% url 'home' %}">
+                                {% trans "Bosh sahifa" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
+                                {% trans "Maktab haqida" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'teachers' in request.path %}active{% endif %}" href="{% url 'teachers:list' %}">
+                                {% trans "O'qituvchilar" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'news' in request.path %}active{% endif %}" href="{% url 'news:list' %}">
+                                {% trans "Yangiliklar" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}">
+                                {% trans "Galereya" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'contact' in request.path %}active{% endif %}" href="{% url 'contacts:contact' %}">
+                                {% trans "Aloqa" %}
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Right Actions: Language & Dark Mode -->
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                        {% get_current_language as CURRENT_LANGUAGE %}
+                        <select id="languageSwitcher" class="form-select form-select-sm lang-select" aria-label="Til tanlash">
+                            <option value="uz" {% if CURRENT_LANGUAGE == 'uz' %}selected{% endif %}>UZ</option>
+                            <option value="ru" {% if CURRENT_LANGUAGE == 'ru' %}selected{% endif %}>RU</option>
+                            <option value="en" {% if CURRENT_LANGUAGE == 'en' %}selected{% endif %}>EN</option>
+                        </select>
+                        <button id="darkModeToggle" class="btn btn-sm btn-theme-toggle" aria-label="Rejim" title="Light / Dark mode">
+                            <i class="fas fa-moon" id="darkModeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <!-- Messages -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title">{{ site_settings.localized_name|default:"19-Maktab" }}</h5>
+                    <p class="small text-muted">{{ site_settings.localized_tagline|default:"Zamonaviy ta'lim va ma'naviyat maskani." }}</p>
+                    <div class="d-flex gap-3 mt-3">
+                        {% if site_settings.telegram_url %}
+                            <a href="{{ site_settings.telegram_url }}" target="_blank" class="text-white"><i class="fab fa-telegram fa-lg"></i></a>
+                        {% endif %}
+                        {% if site_settings.instagram_url %}
+                            <a href="{{ site_settings.instagram_url }}" target="_blank" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                        {% endif %}
+                        {% if site_settings.facebook_url %}
+                            <a href="{{ site_settings.facebook_url }}" target="_blank" class="text-white"><i class="fab fa-facebook fa-lg"></i></a>
+                        {% endif %}
+                        {% if site_settings.youtube_url %}
+                            <a href="{{ site_settings.youtube_url }}" target="_blank" class="text-white"><i class="fab fa-youtube fa-lg"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">{% trans "Bo'limlar" %}</h5>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a href="{% url 'home' %}">{% trans "Bosh sahifa" %}</a></li>
+                        <li><a href="{% url 'home' %}#bizning-maktab">{% trans "Bizning maktab" %}</a></li>
+                        <li><a href="{% url 'home' %}#bizning-direktor">{% trans "Bizning direktor" %}</a></li>
+                        <li><a href="{% url 'home' %}#eng-yangiliklar">{% trans "Eng so'nggi yangiliklar" %}</a></li>
+                        <li><a href="{% url 'home' %}#eng-yaxshi-oquvchi">{% trans "Eng yaxshi o'quvchi" %}</a></li>
+                        <li><a href="{% url 'home' %}#eng-yaxshi-oqituvchi">{% trans "Eng yaxshi o'qituvchi" %}</a></li>
+                        <li><a href="{% url 'gallery' %}">{% trans "Galereya" %}</a></li>
+                        <li><a href="{% url 'contacts:contact' %}">{% trans "Bog'lanish" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">{% trans "Aloqa" %}</h5>
+                    <ul class="list-unstyled small text-muted d-flex flex-column gap-2">
+                        <li><i class="fas fa-map-marker-alt me-2 text-primary"></i> {{ site_settings.localized_address|default:"Toshkent shahar" }}</li>
+                        <li><i class="fas fa-phone me-2 text-primary"></i> {{ site_settings.phone|default:"+998 71 200-19-19" }}</li>
+                        <li><i class="fas fa-envelope me-2 text-primary"></i> {{ site_settings.email|default:"info@maktab19.uz" }}</li>
+                        <li><i class="fas fa-clock me-2 text-primary"></i> {{ site_settings.working_hours|default:"08:00 - 18:00" }}</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">{% trans "Ish tartibi" %}</h5>
+                    <p class="small text-muted">{{ site_settings.working_hours|default:"Dushanba - Shanba: 08:00 - 18:00" }}</p>
+                    <a href="{% url 'contacts:contact' %}" class="btn btn-sm text-white" style="background-color: var(--primary);">
+                        <i class="fas fa-paper-plane me-1"></i> {% trans "Murojaat yo'llash" %}
+                    </a>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-3 text-center small text-muted">
+                &copy; {% now "Y" %} {{ site_settings.localized_name|default:"19-Maktab" }}. {% trans "Barcha huquqlar himoyalangan." %}
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

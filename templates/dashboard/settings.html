@@ -1,0 +1,73 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Maktab Sozlamalari{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Maktab Ma'lumotlari</h4>
+        <small class="text-muted">Saytdagi asosiy rekvizitlar va direktor murojaatini tahrirlash</small>
+    </div>
+</div>
+
+<div class="dash-card">
+    <form method="post" action="{% url 'dashboard_settings' %}">
+        {% csrf_token %}
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Maktab Rasmiy Nomi</label>
+                <input type="text" name="school_name" class="form-control form-control-sm" value="{{ settings.school_name }}">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Shior (Tagline)</label>
+                <input type="text" name="tagline" class="form-control form-control-sm" value="{{ settings.tagline }}">
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Telefon Raqam</label>
+                <input type="text" name="phone" class="form-control form-control-sm" value="{{ settings.phone }}">
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Elektron Pochta</label>
+                <input type="email" name="email" class="form-control form-control-sm" value="{{ settings.email }}">
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Telegram Kanal / Guruh</label>
+                <input type="url" name="telegram_url" class="form-control form-control-sm" value="{{ settings.telegram_url }}">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Manzil</label>
+                <input type="text" name="address" class="form-control form-control-sm" value="{{ settings.address }}">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Ish Vaqti</label>
+                <input type="text" name="working_hours" class="form-control form-control-sm" value="{{ settings.working_hours }}">
+            </div>
+
+            <hr class="my-3">
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Direktor F.I.Sh</label>
+                <input type="text" name="director_name" class="form-control form-control-sm" value="{{ settings.director_name }}">
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small fw-bold text-dark">Direktor Murojaati Matni</label>
+                <textarea name="director_message" rows="3" class="form-control form-control-sm">{{ settings.director_message }}</textarea>
+            </div>
+
+            <div class="col-12 pt-2">
+                <button type="submit" class="btn btn-primary rounded-pill px-4">
+                    <i class="fas fa-save me-1"></i> Saqlash
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

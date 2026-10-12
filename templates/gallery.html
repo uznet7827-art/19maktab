@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Fotogalereya" %} — {{ site_settings.localized_name|default:"19-Maktab" }}{% endblock %}
+
+{% block content %}
+<!-- PAGE HEADER (Clean, bright and modern) -->
+<section class="py-5 bg-white border-bottom text-center">
+  <div class="container py-2">
+    <span class="badge rounded-pill px-3 py-2 mb-2" style="background:#EEF2FF; color:var(--primary,#4F46E5); font-weight:700; font-size:0.75rem;">
+      📸 {% trans "Maktabimiz hayotidan yorqin lahzalar" %}
+    </span>
+    <h1 class="fw-bold mb-2 text-dark" style="font-size:clamp(1.6rem, 3.5vw, 2.4rem);">
+      {% trans "Foto va Video Galereya" %}
+    </h1>
+    <p class="text-muted mx-auto mb-0" style="max-width:620px; font-size:0.9rem;">
+      {% trans "Maktab tadbirlari, bayram tantanalari, dars jarayonlari va o'quvchilarimiz yutuqlaridan saralangan fotolavhalar." %}
+    </p>
+  </div>
+</section>
+
+<section class="py-5" style="background:#F8FAFC;">
+  <div class="container">
+    <!-- CATEGORY FILTER TABS -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+      <a href="{% url 'gallery' %}" 
+         class="btn btn-sm rounded-pill px-3 py-2 fw-semibold {% if current_category == 'all' or not current_category %}btn-primary text-white{% else %}btn-outline-secondary bg-white text-dark{% endif %}">
+        {% trans "Barcha rasmlar" %}
+      </a>
+      {% for slug, name in categories %}
+      <a href="{% url 'gallery' %}?category={{ slug }}" 
+         class="btn btn-sm rounded-pill px-3 py-2 fw-semibold {% if current_category == slug %}btn-primary text-white{% else %}btn-outline-secondary bg-white text-dark{% endif %}">
+        {{ name }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- GALLERY GRID -->
+    <div class="row g-3">
+      {% for item in images %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="gallery-card rounded-3 overflow-hidden shadow-sm bg-white border h-100 position-relative group">
+          <div style="height: 190px; overflow:hidden;">
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" 
+                 class="w-100 h-100 object-fit-cover" loading="lazy" style="transition: transform 0.3s ease;">
+          </div>
+          <div class="p-2 text-center">
+            <h6 class="small fw-bold mb-0 text-dark text-truncate">{{ item.title }}</h6>
+            <small class="text-muted" style="font-size:0.7rem;">{{ item.get_category_display }}</small>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="p-4 bg-white rounded-3 shadow-sm d-inline-block" style="max-width:400px;">
+          <i class="fas fa-images fa-3x text-muted mb-3 opacity-50"></i>
+          <h5 class="fw-bold mb-1">{% trans "Rasmlar hozircha mavjud emas" %}</h5>
+          <p class="text-muted small mb-0">{% trans "Yangi fotoalbomlar tez orada joylanadi." %}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

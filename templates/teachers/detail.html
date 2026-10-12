@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ teacher.full_name }} — O'qituvchi profili{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top: calc(var(--header-height) + 2.5rem);">
+  <div class="container">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" aria-label="Non ushoqlari yo'li">
+      <a href="{% url 'home' %}"><i class="fas fa-home"></i> Bosh sahifa</a>
+      <span>/</span>
+      <a href="{% url 'teachers:list' %}">O'qituvchilar</a>
+      <span>/</span>
+      <span style="color: var(--text);">{{ teacher.full_name }}</span>
+    </nav>
+
+    <div class="teacher-detail-wrap">
+      <!-- Left Column: Photo & Contact info -->
+      <div class="teacher-detail-card">
+        {% if teacher.photo %}
+        <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}" class="teacher-detail-photo">
+        {% else %}
+        <div class="teacher-photo-placeholder" style="height: 380px;">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        {% endif %}
+
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.35rem; padding: 0 1rem;">{{ teacher.full_name }}</h2>
+        <p class="teacher-subject" style="font-size: 1rem; margin-bottom: 0.25rem;">{{ teacher.subject }}</p>
+        <p class="teacher-position">{{ teacher.position|default:"O'qituvchi" }}</p>
+
+        {% if teacher.email or teacher.phone %}
+        <div style="padding: 1.5rem 1rem 0; border-top: 1px solid var(--card-border); margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+          {% if teacher.phone %}
+          <div><i class="fas fa-phone-alt text-cyan"></i> {{ teacher.phone }}</div>
+          {% endif %}
+          {% if teacher.email %}
+          <div><i class="fas fa-envelope text-cyan"></i> {{ teacher.email }}</div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Right Column: Bio & Attributes -->
+      <div class="teacher-bio-card">
+        <h3 class="section-title" style="margin-bottom: 2rem;">Ma'lumotlar va Tajriba</h3>
+
+        <div class="teacher-attribute-list">
+          <div class="teacher-attr-item">
+            <span class="teacher-attr-label">Mutaxassislik fani</span>
+            <span class="teacher-attr-val">{{ teacher.subject }}</span>
+          </div>
+
+          <div class="teacher-attr-item">
+            <span class="teacher-attr-label">Toifa / Malaka</span>
+            <span class="teacher-attr-val">{{ teacher.qualification|default:"Oliy toifali o'qituvchi" }}</span>
+          </div>
+
+          <div class="teacher-attr-item">
+            <span class="teacher-attr-label">Ish staji</span>
+            <span class="teacher-attr-val">{{ teacher.experience_years|default:"10+" }} yil</span>
+          </div>
+
+          <div class="teacher-attr-item">
+            <span class="teacher-attr-label">Ma'lumoti</span>
+            <span class="teacher-attr-val">{{ teacher.education|default:"Oliy pedagogik" }}</span>
+          </div>
+        </div>
+
+        {% if teacher.bio %}
+        <div style="margin-top: 2.5rem;">
+          <h4 style="margin-bottom: 1rem;"><i class="fas fa-book-reader text-cyan"></i> Tarjimai hol va pedagogik faoliyat</h4>
+          <div style="line-height: 1.8; color: var(--text-muted);">
+            {{ teacher.bio|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if teacher.achievements %}
+        <div style="margin-top: 2.5rem;">
+          <h4 style="margin-bottom: 1rem;"><i class="fas fa-medal text-gold"></i> Yutuqlar va mukofotlar</h4>
+          <div style="line-height: 1.8; color: var(--text-muted);">
+            {{ teacher.achievements|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 3rem;">
+          <a href="{% url 'teachers:list' %}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Barcha ustozlar ro'yxatiga qaytish
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

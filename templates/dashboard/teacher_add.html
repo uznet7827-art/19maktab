@@ -1,0 +1,77 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Yangi Ustoz Qo'shish{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h4 class="fw-bold mb-0 text-dark">Yangi O'qituvchi Qo'shish</h4>
+        <small class="text-muted">Maktab pedagogik jamoasiga yangi ustoz ma'lumotlarini kiritish</small>
+    </div>
+    <a href="{% url 'dashboard_teachers' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+        &larr; Orqaga
+    </a>
+</div>
+
+<div class="dash-card">
+    <form method="post" action="{% url 'dashboard_teacher_add' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Ustoz F.I.Sh <span class="text-danger">*</span></label>
+                <input type="text" name="full_name" class="form-control" placeholder="Masalan: Karimova Dilnoza Anvarovna" required>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">O'qitadigan Fani <span class="text-danger">*</span></label>
+                <input type="text" name="subject" class="form-control" placeholder="Masalan: Fizika va Astronomiya" required>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Lavozimi / Toifasi</label>
+                <input type="text" name="position" class="form-control" placeholder="Masalan: Oliy toifali o'qituvchi">
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Kafedra (Bo'lim)</label>
+                <select name="department" class="form-select">
+                    <option value="">Tanlang...</option>
+                    {% for d in departments %}
+                        <option value="{{ d.id }}">{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <label class="form-label small fw-bold text-dark">Ish Tajribasi (Yillarda)</label>
+                <input type="number" name="experience_years" class="form-control" placeholder="Masalan: 10" min="0">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Ma'lumoti (Universitet)</label>
+                <input type="text" name="education" class="form-control" placeholder="Masalan: O'zbekiston Milliy Universiteti">
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label class="form-label small fw-bold text-dark">Ustoz Surat (Fotosurati)</label>
+                <input type="file" name="photo" class="form-control" accept="image/*">
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small fw-bold text-dark">Qisqacha Tarjimai Hol (Bio)</label>
+                <textarea name="bio" rows="3" class="form-control" placeholder="Ustozning erishgan yutuqlari, mukofotlari..."></textarea>
+            </div>
+
+            <div class="col-12 pt-3 border-top d-flex gap-2">
+                <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">
+                    <i class="fas fa-save me-1"></i> Ustozni Saqlash
+                </button>
+                <a href="{% url 'dashboard_teachers' %}" class="btn btn-light border rounded-pill px-3">
+                    Bekor qilish
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
