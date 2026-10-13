@@ -37,20 +37,21 @@ class Command(BaseCommand):
                     "according to modern educational standards. Our school is equipped with state-of-the-art "
                     "laboratories, sports complexes, and IT classrooms."
                 ),
-                'director_name': "Karimova Gulnora Ahmadovna",
+                'director_name': "M. Nabiyeva",
                 'director_photo': "director/director.png",
                 'director_message': (
-                    "Hurmatli ota-onalar va aziz o'quvchilar! Bizning 19-maktabimiz har bir bolaning "
-                    "iqtidori va qobiliyatini yuzaga chiqarish uchun barcha imkoniyatlarni yaratadi."
+                    "Bizning 19-umumiy o'rta ta'lim maktabimiz har bir o'quvchining qobiliyati va iqtidorini ro'yobga chiqarish, "
+                    "yoshlarni qonunlarga hurmat, yuksak ma'naviyat va zamonaviy ilm-fan ruhida tarbiyalashni bosh maqsad qilib qo'ygan. "
+                    "Maktabimiz eshiklari barcha yoshlarimiz uchun yuksak marralar va orzular sari hamisha ochiqdir!"
                 ),
-                'phone': "+998 71 200-19-19",
+                'phone': "+998 69 227-19-19",
                 'email': "info@maktab19.uz",
-                'address': "Toshkent shahri, Chilonzor tumani, 19-mavze",
-                'address_ru': "г. Ташкент, Чиланзарский район, 19-й квартал",
-                'address_en': "Tashkent city, Chilanzar district, 19th block",
+                'address': "Namangan viloyati, Namangan tumani, 19-sonli umumiy o'rta ta'lim maktabi",
+                'address_ru': "Наманганская область, Наманганский район, общеобразовательная школа №19",
+                'address_en': "Namangan region, Namangan district, Secondary School #19",
                 'working_hours': "Dushanba - Shanba: 08:00 - 18:00",
                 'facebook_url': "https://facebook.com",
-                'telegram_url': "https://t.me/maktab19uz",
+                'telegram_url': "https://t.me/qwert19idum",
                 'instagram_url': "https://instagram.com",
                 'youtube_url': "https://youtube.com",
                 'primary_color': "#4F46E5",
@@ -345,10 +346,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("[OK] 3 Sample news initialized."))
 
         try:
-            import import_all_real_data
-            self.stdout.write(self.style.SUCCESS("[OK] Real channel data imported."))
+            import import_comprehensive_channel_data
+            self.stdout.write(self.style.SUCCESS("[OK] Comprehensive channel data imported."))
         except Exception as e:
-            self.stdout.write(f"Real data import note: {e}")
+            self.stdout.write(f"Comprehensive channel data import note: {e}")
 
         self.stdout.write(self.style.SUCCESS("All sample data created successfully!"))
 
