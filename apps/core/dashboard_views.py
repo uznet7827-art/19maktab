@@ -382,6 +382,8 @@ def dashboard_settings(request):
         site_settings_obj.director_name = request.POST.get('director_name', site_settings_obj.director_name)
         site_settings_obj.director_message = request.POST.get('director_message', site_settings_obj.director_message)
         site_settings_obj.telegram_url = request.POST.get('telegram_url', site_settings_obj.telegram_url)
+        if 'director_photo' in request.FILES and request.FILES['director_photo']:
+            site_settings_obj.director_photo = request.FILES['director_photo']
         site_settings_obj.save()
         messages.success(request, "Maktab sozlamalari muvaffaqiyatli saqlandi!")
         return redirect('dashboard_settings')
