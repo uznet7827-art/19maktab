@@ -38,6 +38,7 @@ class Command(BaseCommand):
                     "laboratories, sports complexes, and IT classrooms."
                 ),
                 'director_name': "Karimova Gulnora Ahmadovna",
+                'director_photo': "director/director.png",
                 'director_message': (
                     "Hurmatli ota-onalar va aziz o'quvchilar! Bizning 19-maktabimiz har bir bolaning "
                     "iqtidori va qobiliyatini yuzaga chiqarish uchun barcha imkoniyatlarni yaratadi."
@@ -57,6 +58,9 @@ class Command(BaseCommand):
                 'accent_color': "#FACC15",
             }
         )
+        if not site_settings.director_photo:
+            site_settings.director_photo = "director/director.png"
+            site_settings.save()
         if created:
             self.stdout.write(self.style.SUCCESS("[OK] SiteSettings created."))
         else:
