@@ -11,73 +11,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Add apps directory to sys.path so apps can be imported cleanly
 sys.path.insert(0, str(BASE_DIR / 'apps'))
 
-# Try to load environment variables using django-environ or python-dotenv or fallback
+# Load .env file if present
 try:
-    import environ
-    env = environ.Env(
-        DEBUG=(bool, True),
-        SECRET_KEY=(str, 'django-insecure-maktab19-school-platform-secret-key-2026'),
-        ALLOWED_HOSTS=(list, ['127.0.0.1', 'localhost', '*']),
-        DATABASE_URL=(str, f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-    )
-    environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / '.env')
 except ImportError:
-    try:
-        from dotenv import load_dotenv
-        load_dotenv(os.path.join(BASE_DIR, '.env'))
-    except ImportError:
-        pass
+    env_file = BASE_DIR / '.env'
+    if env_file.exists():
+        try:
+            with open(env_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#') and '=' in line:
+                        k, v = line.split('=', 1)
+                        os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+        except Exception:
+            pass
 
-    class FallbackEnv:
-        def __call__(self, key, default=None, cast=None):
-            val = os.getenv(key, default)
-            if cast is bool and isinstance(val, str):
-                return val.lower() in ('1', 'true', 'yes', 'on')
-            if cast is list and isinstance(val, str):
-                return [v.strip() for v in val.split(',') if v.strip()]
-            if cast and val is not None:
-                return cast(val)
-            return val
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-maktab19-school-platform-secret-key-2026')
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-        def bool(self, key, default=False):
-            return self(key, default=default, cast=bool)
+_allowed_hosts = os.getenv('ALLOWED_HOSTS', '*')
+if _allowed_hosts == '*' or not _allowed_hosts:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts.split(',') if h.strip()]
 
-        def list(self, key, default=None):
-            return self(key, default=default or [], cast=list)
-
-        def str(self, key, default=''):
-            return str(self(key, default=default))
-
-        def db(self, key='DATABASE_URL', default=None):
-            db_url = os.getenv(key, default or f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
-            if db_url.startswith('sqlite:///'):
-                path = db_url.replace('sqlite:///', '')
-                return {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': BASE_DIR / path if not os.path.isabs(path) else Path(path),
-                }
-            elif db_url.startswith('postgres://') or db_url.startswith('postgresql://'):
-                # Basic postgres url parser
-                import urllib.parse
-                url = urllib.parse.urlparse(db_url)
-                return {
-                    'ENGINE': 'django.db.backends.postgresql',
-                    'NAME': url.path[1:],
-                    'USER': url.username,
-                    'PASSWORD': url.password,
-                    'HOST': url.hostname,
-                    'PORT': url.port or 5432,
-                }
-            return {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-
-    env = FallbackEnv()
-
-SECRET_KEY = env.str('SECRET_KEY', 'django-insecure-maktab19-school-platform-secret-key-2026')
-DEBUG = env.bool('DEBUG', True)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '*'])
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.onrender.com',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+_csrf_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if _csrf_origins:
+    CSRF_TRUSTED_ORIGINS.extend([origin.strip() for origin in _csrf_origins.split(',') if origin.strip()])
 
 # Application definition
 INSTALLED_APPS = [
@@ -140,19 +107,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-try:
-    if hasattr(env, 'db'):
-        DATABASES = {
-            'default': env.db('DATABASE_URL', default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
+DATABASE_URL = os.getenv('DATABASE_URL', '')
+if DATABASE_URL and (DATABASE_URL.startswith('postgres://') or DATABASE_URL.startswith('postgresql://')):
+    import urllib.parse
+    url = urllib.parse.urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port or 5432,
         }
-    else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
-except Exception:
+    }
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
