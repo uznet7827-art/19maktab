@@ -344,5 +344,11 @@ class Command(BaseCommand):
             News.objects.get_or_create(slug=n['slug'], defaults=n)
         self.stdout.write(self.style.SUCCESS("[OK] 3 Sample news initialized."))
 
+        try:
+            import import_all_real_data
+            self.stdout.write(self.style.SUCCESS("[OK] Real channel data imported."))
+        except Exception as e:
+            self.stdout.write(f"Real data import note: {e}")
+
         self.stdout.write(self.style.SUCCESS("All sample data created successfully!"))
 
