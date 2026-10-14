@@ -8,130 +8,45 @@
 <!-- ═══════════════════════════════════════════════════════════
      HERO SECTION
 ═══════════════════════════════════════════════════════════ -->
-<section class="hero-section position-relative py-4 py-lg-5 overflow-hidden" id="home" 
-         style="background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.45) 0%, transparent 45%), radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.35) 0%, transparent 45%), linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #312E81 100%); color: #fff;">
-  
-  <!-- Subtle glowing ambient orbs in background -->
-  <div class="position-absolute rounded-circle" style="width: 320px; height: 320px; background: rgba(79, 70, 229, 0.25); filter: blur(80px); top: -60px; left: -60px; pointer-events: none;"></div>
-  <div class="position-absolute rounded-circle" style="width: 280px; height: 280px; background: rgba(6, 182, 212, 0.2); filter: blur(70px); bottom: -40px; right: 10%; pointer-events: none;"></div>
-
-  <div class="container py-3 py-lg-4 position-relative" style="z-index: 2;">
+<section class="hero-section py-4 py-lg-5" id="home" 
+         style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4338CA 100%); color: #fff;">
+  <div class="container py-3 py-md-4">
     <div class="row align-items-center g-4 g-lg-5">
       
-      <!-- LEFT COLUMN: Content & CTAs -->
+      <!-- LEFT COLUMN -->
       <div class="col-lg-7 text-center text-lg-start">
-        
-        <!-- School Tag Badge -->
-        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3 shadow-sm"
-             style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 0.8rem; font-weight: 600;">
-          <span class="badge rounded-circle p-1 bg-warning text-dark"><i class="fas fa-star" style="font-size: 0.65rem;"></i></span>
-          <span class="text-white">Namangan viloyati, 19-sonli maktab</span>
-          <span class="d-none d-sm-inline opacity-75">|</span>
-          <span class="d-none d-sm-inline text-warning">Zamonaviy ta'lim</span>
-        </div>
+        <span class="badge rounded-pill px-3 py-2 mb-3 border border-white border-opacity-25"
+              style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px); font-size: 0.82rem; font-weight: 500;">
+          <i class="fas fa-map-marker-alt text-warning me-1"></i> Namangan viloyati, 19-sonli maktab
+        </span>
 
-        <!-- Main Heading (White + Gold Gradient) -->
-        <h1 class="hero-title mb-3 fw-bold text-white" style="font-size: clamp(2rem, 4.5vw, 3.6rem); line-height: 1.15; letter-spacing: -0.02em;">
-          Kelajak sari <br>
-          <span style="background: linear-gradient(135deg, #FDE047 0%, #38BDF8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">
-            bilim bilan!
-          </span>
+        <h1 class="hero-title mb-3 fw-bold text-white" style="font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 1.2;">
+          Kelajak sari <span class="text-warning">bilim bilan!</span>
         </h1>
 
-        <!-- Subtitle -->
-        <p class="hero-subtitle mb-4 text-light opacity-90 mx-auto mx-lg-0" style="font-size: clamp(0.95rem, 1.8vw, 1.12rem); line-height: 1.65; max-width: 580px;">
-          {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yetakchi yoshlar va yorqin kelajak poydevori! Har bir o'quvchining iqtidorini yuzaga chiqaruvchi ilg'or pedagogik maskan." }}
+        <p class="hero-subtitle mb-4 text-white-50 mx-auto mx-lg-0" style="font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.65; max-width: 520px;">
+          {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yetakchi yoshlar va yorqin kelajak poydevori!" }}
         </p>
 
-        <!-- Action Buttons -->
-        <div class="d-flex flex-wrap gap-2 gap-sm-3 justify-content-center justify-content-lg-start mb-4">
-          <a href="{% url 'about' %}" class="btn btn-warning rounded-pill px-4 py-2 py-sm-3 fw-bold text-dark shadow d-inline-flex align-items-center gap-2" style="font-size: 0.92rem;">
-            <i class="fas fa-school"></i>
-            <span>{% trans "Maktab haqida" %}</span>
-            <i class="fas fa-arrow-right small"></i>
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+          <a href="{% url 'about' %}" class="btn btn-light rounded-pill px-4 py-2 py-sm-3 fw-semibold text-primary shadow-sm" style="font-size: 0.95rem;">
+            <i class="fas fa-info-circle me-1"></i> {% trans "Maktab haqida" %}
           </a>
-          <a href="{% url 'teachers:list' %}" class="btn btn-outline-light rounded-pill px-4 py-2 py-sm-3 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm" style="font-size: 0.92rem; border-width: 1.5px;">
-            <i class="fas fa-chalkboard-teacher text-warning"></i>
-            <span>{% trans "Ustozlarimiz" %}</span>
-          </a>
-          <a href="{% url 'news:list' %}" class="btn btn-link text-white text-decoration-none px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1 opacity-90 hover-opacity-100" style="font-size: 0.9rem;">
-            <i class="fas fa-newspaper text-info"></i>
-            <span>{% trans "Yangiliklar" %}</span>
+          <a href="{% url 'news:list' %}" class="btn btn-outline-light rounded-pill px-4 py-2 py-sm-3 fw-semibold shadow-sm" style="font-size: 0.95rem;">
+            <i class="fas fa-newspaper me-1"></i> {% trans "Yangiliklar" %}
           </a>
         </div>
-
-        <!-- Trust & Highlights Bar -->
-        <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-3 gap-md-4 pt-3 border-top border-white border-opacity-15 text-white flex-wrap" style="font-size: 0.78rem;">
-          <div class="d-flex align-items-center gap-1 opacity-90">
-            <i class="fas fa-check-circle text-warning"></i>
-            <span>Davlat ta'lim standarti</span>
-          </div>
-          <div class="d-flex align-items-center gap-1 opacity-90">
-            <i class="fas fa-check-circle text-info"></i>
-            <span>16+ Oliy toifali ustozlar</span>
-          </div>
-          <div class="d-flex align-items-center gap-1 opacity-90">
-            <i class="fas fa-check-circle text-success"></i>
-            <span>Respublika yutuqlari</span>
-          </div>
-        </div>
-
       </div>
 
-      <!-- RIGHT COLUMN: Layered Visual Showcase -->
-      <div class="col-lg-5">
-        <div class="hero-showcase-container position-relative mx-auto" style="max-width: 440px;">
-          
-          <!-- Main School Photo Card -->
-          <div class="hero-photo-card rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-25 position-relative" 
-               style="height: 340px; background: #1E293B;">
-            {% if site_settings.hero_image %}
-              <img src="{{ site_settings.hero_image.url }}" alt="19-maktab binosi va tadbirlari" 
-                   class="w-100 h-100" style="object-fit: cover; object-position: center;">
-            {% else %}
-              <img src="/media/site/hero_school.jpg" alt="19-maktab" 
-                   class="w-100 h-100" style="object-fit: cover; object-position: center;">
-            {% endif %}
-            
-            <!-- Photo caption gradient overlay -->
-            <div class="position-absolute bottom-0 start-0 end-0 p-3" 
-                 style="background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.6) 60%, transparent 100%);">
-              <span class="badge rounded-pill px-2 py-1 mb-1 text-white" style="background: rgba(79, 70, 229, 0.85); font-size: 0.68rem;">
-                <i class="fas fa-map-marker-alt me-1"></i> Namangan tumani
-              </span>
-              <h5 class="fw-bold text-white mb-0 fs-6">19-umumiy o'rta ta'lim maktabi</h5>
-              <small class="text-light opacity-75" style="font-size: 0.72rem;">Yangi 2026/2027 o'quv yili tadbirlaridan lavha</small>
-            </div>
-          </div>
-
-          <!-- FLOATING BADGE 1 (Top Left): Trophy -->
-          <div class="floating-hero-badge hero-badge-top shadow-lg rounded-4 p-2 p-sm-3 d-flex align-items-center gap-2 bg-white text-dark position-absolute"
-               style="top: -15px; left: -15px; z-index: 5; border: 1px solid rgba(0,0,0,0.06);">
-            <div class="rounded-3 d-flex align-items-center justify-content-center text-white flex-shrink-0"
-                 style="width: 38px; height: 38px; background: linear-gradient(135deg, #F59E0B, #FACC15);">
-              <i class="fas fa-trophy" style="font-size: 1rem;"></i>
-            </div>
-            <div>
-              <div class="fw-bold text-dark lh-1" style="font-size: 0.85rem;">100+ G'alabalar</div>
-              <small class="text-muted" style="font-size: 0.68rem;">Viloyat & Respublika</small>
-            </div>
-          </div>
-
-          <!-- FLOATING BADGE 2 (Bottom Right): Students -->
-          <div class="floating-hero-badge hero-badge-bottom shadow-lg rounded-4 p-2 p-sm-3 d-flex align-items-center gap-2 bg-white text-dark position-absolute"
-               style="bottom: -15px; right: -15px; z-index: 5; border: 1px solid rgba(0,0,0,0.06);">
-            <div class="rounded-3 d-flex align-items-center justify-content-center text-white flex-shrink-0"
-                 style="width: 38px; height: 38px; background: linear-gradient(135deg, #4F46E5, #06B6D4);">
-              <i class="fas fa-user-graduate" style="font-size: 1rem;"></i>
-            </div>
-            <div>
-              <div class="fw-bold text-dark lh-1" style="font-size: 0.85rem;">1,450+ O'quvchi</div>
-              <small class="text-success fw-semibold" style="font-size: 0.68rem;">
-                <i class="fas fa-circle" style="font-size: 0.45rem;"></i> Yangi o'quv yili faol
-              </small>
-            </div>
-          </div>
-
+      <!-- RIGHT COLUMN: Clean school photo -->
+      <div class="col-lg-5 text-center">
+        <div class="hero-photo-frame mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-20" 
+             style="max-width: 440px; height: 320px; background: #1E293B;">
+          {% if site_settings.hero_image %}
+            <img src="{{ site_settings.hero_image.url }}" alt="19-maktab" class="w-100 h-100" style="object-fit: cover;">
+          {% else %}
+            <img src="/media/site/hero_school.jpg" alt="19-maktab" class="w-100 h-100" style="object-fit: cover;">
+          {% endif %}
         </div>
       </div>
 
