@@ -201,7 +201,7 @@ all_teachers = [
         'experience_years': 40,
         'order': 12,
         'rel_photo': "teachers/ildor_otaboyev.jpg",
-        'photo_url': posts[47]['photos'][0] if len(posts) > 47 and len(posts[47]['photos']) > 0 else None,
+        'photo_url': posts[47]['photos'][2] if len(posts) > 47 and len(posts[47]['photos']) > 2 else None,
     },
     {
         'full_name': "Yunusova Gulbahor",
@@ -455,7 +455,7 @@ news_list = [
             "Atlas va adrasning betakror jilosi, milliy do'ppi va an'anaviy bezaklar xalqimizning o'ziga xosligini yanada yorqin namoyon etdi."
         ),
         'date': datetime(2026, 10, 9, 11, 0),
-        'photo_url': posts[10]['photos'][0] if len(posts[10]['photos']) > 0 else None,
+        'photo_url': posts[6]['photos'][0] if len(posts) > 6 and len(posts[6]['photos']) > 0 else None,
         'rel_photo': "news/covers/milliylik_tadbir.jpg",
         'is_featured': True,
     },
@@ -470,7 +470,7 @@ news_list = [
             "Ona tili o'qituvchilari tomonidan o'quvchilarga kerakli adabiyotlar va tarixiy ma'lumotlar taqdim etildi."
         ),
         'date': datetime(2026, 9, 22, 10, 0),
-        'photo_url': posts[47]['photos'][0] if len(posts[47]['photos']) > 0 else None,
+        'photo_url': posts[47]['photos'][3] if len(posts) > 47 and len(posts[47]['photos']) > 3 else None,
         'rel_photo': "news/covers/jadidlar_izidan.jpg",
         'is_featured': False,
     },
@@ -533,6 +533,36 @@ news_list = [
         'photo_url': posts[7]['photos'][0] if len(posts[7]['photos']) > 0 else None,
         'rel_photo': "news/covers/hokim_urinbosari_tashrif.jpg",
         'is_featured': False,
+    },
+    {
+        'title': "19-maktabda o'quvchi qizlar bilan kengaytirilgan ma'naviy-tarbiyaviy yig'ilish o'tkazildi",
+        'slug': "qizlar-yigilishi-odob-axloq-va-tartib-intizom",
+        'category': cat_manaviyat,
+        'excerpt': "8-11 sinflardan 100 nafar o'quvchi qizlar hamda pedagoglar ishtirokida odob-axloq, kiyinish madaniyati va intizom bo'yicha yig'ilish bo'lib o'tdi.",
+        'content': (
+            "13.10.2026 kuni Namangan tumani maktabgacha va maktab ta'limi bo'limiga qarashli 19-sonli umumiy o'rta ta'lim maktabida navbatdagi qizlar yig'ilishi o'tkazildi.\n\n"
+            "Yig'ilishda 8-9-10-11 sinflardan 100 nafar o'quvchi qizlar, 10 nafar o'qituvchi hamda sinf rahbarlari ishtirok etishdi.\n\n"
+            "Yig'ilishda MMIBDO' M. Shokirova, Xotin-qizlar masalalari bo'yicha mas'ul pedagog M. Xasanova, maktab amaliyotchi psixologi N. Bekmirzayeva hamda maktab maslahatchisi G. Narzullayeva ishtirok etdilar.\n\n"
+            "Yig'ilishda odob-axloq, kiyinish madaniyati, o'zini tutish, maktab tartib-qoidalari va darslarga to'liq qatnashish intizomi haqida atroflicha muhokamalar o'tkazildi."
+        ),
+        'date': datetime(2026, 10, 13, 9, 25),
+        'photo_url': "https://cdn4.telesco.pe/file/LoO8vJFqZSly7yhZ7uWbvmqEid3XHfWZnMJ9ZREu8x5nlviFEW8Nmy7oGlT6kcPZMEpmJLvd5x8-PfxQ0B589fHd0oEhZVLRVYG_NF1GJ-PO73C3z9OORPGNEx4Yz1syIFCM84GnBFte8J92yftHP0ilXEi2B3655x7_bE3wpknzKEkBo3e27otASZ9XYuJ1eWEPzXV6LP7rQ-W2VrPDEo8pDe6LE_WGzkdgWoMi-Q0KBg8sRmT5PfAaF6wCTBlXD8ETfzyqCiaynpFuV7cRT6ibtWsWjqOjRvh0Syk037Cd3ntNINd-O0Jo4NpI11tXNBpkV2020GqpqXa9PzEa2g.jpg",
+        'rel_photo': "news/covers/qizlar_yigilishi.jpg",
+        'is_featured': True,
+    },
+    {
+        'title': "3-A sinfida Tarbiya fanidan 'Dunyomizga nimalar xavf solmoqda' mavzusida ochiq dars bo'lib o'tdi",
+        'slug': "3-a-sinfida-tarbiya-fanidan-ochiq-dars",
+        'category': cat_talim,
+        'excerpt': "Namangan tumani 19-sonli maktabning 3-A sinf o'quvchilari ishtirokida Tarbiya fanidan qiziqarli va interaktiv ochiq dars tashkil etildi.",
+        'content': (
+            "14.10.2026 kuni Namangan tumani 19-sonli maktabning 3-'A' sinf o'quvchilari ishtirokida Tarbiya fanidan 'Dunyomizga nimalar xavf solmoqda' mavzusida ochiq dars o'tkazildi.\n\n"
+            "Ochiq darsda o'quvchilar tabiatni asrash, ekologik madaniyat, mehr-oqibat va tinchlikning qadriga yetish haqida o'z fikr va bilimlarini faol namoyon etdilar. Dars zamonaviy pedagogik texnologiyalar va ko'rgazmali vositalar yordamida yuqori saviyada olib borildi."
+        ),
+        'date': datetime(2026, 10, 14, 14, 35),
+        'photo_url': "https://cdn4.telesco.pe/file/myd_0cMLAYCfNNggI1msJdzu5cFhzLt_ueALML-EHtruZmCHud1Zu8xflfvMGciUci-FLhsNPFUKYxU7jOprBN7raZHqlaaVwO4lN8_aPsJsY1F_6bAsmnW6WjSG-NsYsrBxxNEOkI7k_osyXvCKv7dy-Vt3c0kOBDDmx0tBoj6QnG37BmJnb27aOwflXaSmfxGR3TrWeRIxA0r6AsznCUyMErnz2-1mILe73thIJ41j2psSn17o25pEZIOtpYip4swHtuXa3Z1s6QUpxAHtlwcRRGb8V_en126vpcwfNsbxliWPih0o2F12U3lFj7I6vRA_8jwUYXoRczyotky7bw.jpg",
+        'rel_photo': "news/covers/ochiq_dars_3a.jpg",
+        'is_featured': True,
     },
 ]
 

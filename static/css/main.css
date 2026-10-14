@@ -3174,6 +3174,114 @@ p:last-child {
   .hero-title { font-size: 1.35rem !important; }
   .stat-value { font-size: 1.2rem !important; }
   .col-6.col-md-3 .stat-card { padding: .6rem .4rem !important; }
-  .news-mini-img { height: 100px !important; }
   .mobile-quick-chip { font-size: .67rem; padding: .28rem .6rem; }
 }
+
+/* ==========================================================================
+   35. MODERN TEACHER CARDS & MOBILE APP-LIKE ENHANCEMENTS
+   ========================================================================== */
+.teacher-card-modern,
+.teacher-home-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  border: 1px solid rgba(79, 70, 229, 0.08) !important;
+}
+
+.teacher-card-modern:hover,
+.teacher-home-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(79, 70, 229, 0.14) !important;
+  border-color: rgba(79, 70, 229, 0.25) !important;
+}
+
+.teacher-card-modern:hover .teacher-card-img,
+.teacher-home-card:hover img {
+  transform: scale(1.05);
+}
+
+.teacher-colleague-item:hover {
+  background: #EEF2FF !important;
+  border-color: #C7D2FE !important;
+  transform: translateX(4px);
+}
+
+/* Hide scrollbar for clean horizontal filter scroll on mobile */
+.teacher-filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile Bottom App Navigation Bar */
+.mobile-bottom-nav {
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.mobile-bottom-link {
+  color: #64748B;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-bottom-link:hover,
+.mobile-bottom-link.active {
+  color: #4F46E5 !important;
+  transform: translateY(-1px);
+}
+
+.mobile-bottom-link.active i {
+  color: #4F46E5 !important;
+}
+
+/* Universal Image Safeguards: never stretch, always crisp */
+img {
+  max-width: 100%;
+}
+
+.news-mini-img img,
+.teacher-card-img,
+.director-photo-wrapper img,
+.spotlight-badge-circle img {
+  object-fit: cover !important;
+  image-rendering: auto;
+}
+
+/* Mobile Specific Polish */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 65px; /* Leave space for bottom bar */
+  }
+
+  /* Director Card Mobile Layout */
+  .director-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    padding: 1.5rem !important;
+  }
+
+  .director-photo-col {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .director-message-col {
+    text-align: left;
+  }
+
+  .director-signature {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.4rem;
+  }
+
+  /* Carousel Slide on mobile */
+  .carousel-hero-slide {
+    min-height: 270px !important;
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Prevent side-scrolling bugs */
+  body, html {
+    overflow-x: hidden;
+  }
+}
+

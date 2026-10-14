@@ -1,111 +1,179 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
-{% block title %}{{ teacher.full_name }}{% endblock %}
+{% block title %}{{ teacher.full_name }} — {% trans "Ustoz profili" %}{% endblock %}
 
 {% block content %}
-<div class="bg-light py-4 border-bottom mb-4">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Bosh sahifa" %}</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'teachers:list' %}">{% trans "O'qituvchilar" %}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ teacher.full_name }}</li>
-            </ol>
-        </nav>
-    </div>
+<!-- HEADER / BREADCRUMB -->
+<div class="py-3 py-md-4 border-bottom" style="background: #F8FAFC;">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0" style="font-size: 0.84rem;">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-primary text-decoration-none"><i class="fas fa-home me-1"></i>{% trans "Bosh sahifa" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'teachers:list' %}" class="text-primary text-decoration-none">{% trans "O'qituvchilar" %}</a></li>
+        <li class="breadcrumb-item active text-dark fw-semibold" aria-current="page">{{ teacher.full_name }}</li>
+      </ol>
+    </nav>
+  </div>
 </div>
 
-<div class="container py-4">
-    <div class="row g-5">
-        <!-- Profile Column -->
-        <div class="col-lg-4 text-center">
-            <div class="p-4 bg-white rounded-4 shadow-sm border">
-                <div class="mx-auto rounded-circle overflow-hidden shadow-sm mb-3 border border-4 border-light" style="width: 180px; height: 180px; background: #F3F4F6;">
-                    {% if teacher.photo %}
-                        <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}" class="w-100 h-100" style="object-fit: cover;">
-                    {% else %}
-                        <div class="d-flex align-items-center justify-content-center h-100 text-secondary">
-                            <i class="fas fa-user fa-5x"></i>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <h4 class="fw-bold mb-1">{{ teacher.full_name }}</h4>
-                <p class="text-primary fw-semibold mb-2">{{ teacher.localized_subject }}</p>
-                <p class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">{{ teacher.localized_position }}</p>
-
-                <hr class="my-4">
-
-                <div class="text-start d-flex flex-column gap-3 small">
-                    {% if teacher.department %}
-                        <div>
-                            <span class="text-muted d-block"><i class="fas fa-layer-group me-1"></i> {% trans "Kafedra / Yo'nalish" %}:</span>
-                            <span class="fw-semibold">{{ teacher.department.localized_name }}</span>
-                        </div>
-                    {% endif %}
-                    {% if teacher.experience_years %}
-                        <div>
-                            <span class="text-muted d-block"><i class="fas fa-history me-1"></i> {% trans "Ish staji" %}:</span>
-                            <span class="fw-semibold">{{ teacher.experience_years }} {% trans "yil" %}</span>
-                        </div>
-                    {% endif %}
-                    {% if teacher.education %}
-                        <div>
-                            <span class="text-muted d-block"><i class="fas fa-university me-1"></i> {% trans "Ma'lumoti" %}:</span>
-                            <span class="fw-semibold">{{ teacher.education }}</span>
-                        </div>
-                    {% endif %}
-                    {% if teacher.email %}
-                        <div>
-                            <span class="text-muted d-block"><i class="fas fa-envelope me-1"></i> {% trans "Elektron pochta" %}:</span>
-                            <a href="mailto:{{ teacher.email }}" class="text-primary text-decoration-none fw-semibold">{{ teacher.email }}</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Bio & Details Column -->
-        <div class="col-lg-8">
-            <div class="p-4 p-md-5 bg-white rounded-4 shadow-sm border mb-4">
-                <h3 class="fw-bold mb-3 border-bottom pb-2">{% trans "Ustoz haqida" %}</h3>
-                <div class="text-secondary mb-4" style="font-size: 1.05rem; line-height: 1.8;">
-                    {{ teacher.localized_bio|linebreaks|default:"Pedagog haqida batafsil ma'lumotlar yaqin kunlarda to'ldiriladi." }}
-                </div>
-            </div>
-
-            {% if colleagues %}
-                <div class="p-4 bg-white rounded-4 shadow-sm border">
-                    <h5 class="fw-bold mb-3">{% trans "Kafedraning boshqa ustozlari" %}</h5>
-                    <div class="row g-3">
-                        {% for colleague in colleagues %}
-                            <div class="col-sm-6">
-                                <div class="d-flex align-items-center gap-3 p-2 rounded-3 bg-light">
-                                    <div class="rounded-circle overflow-hidden flex-shrink-0" style="width: 50px; height: 50px; background: #e5e7eb;">
-                                        {% if colleague.photo %}
-                                            <img src="{{ colleague.photo.url }}" alt="{{ colleague.full_name }}" class="w-100 h-100" style="object-fit: cover;">
-                                        {% else %}
-                                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <h6 class="mb-0 text-truncate">
-                                            <a href="{{ colleague.get_absolute_url }}" class="text-dark text-decoration-none">
-                                                {{ colleague.full_name }}
-                                            </a>
-                                        </h6>
-                                        <small class="text-muted d-block text-truncate">{{ colleague.localized_subject }}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+<div class="py-4 py-md-5" style="background: #F1F5F9; min-height: 70vh;">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      
+      <!-- PROFILE CARD (Left Column) -->
+      <div class="col-12 col-lg-4 text-center">
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-4 bg-white sticky-lg-top" style="top: 100px;">
+          
+          <!-- Portrait photo -->
+          <div class="teacher-detail-photo-wrap mx-auto position-relative rounded-4 shadow-sm mb-3 overflow-hidden" 
+               style="width: 200px; height: 230px; background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); border: 3px solid #EEF2FF;">
+            {% if teacher.photo %}
+              <img src="{{ teacher.photo.url }}" 
+                   alt="{{ teacher.full_name }}" 
+                   class="w-100 h-100" 
+                   style="object-fit: cover; object-position: top center;">
+            {% else %}
+              <div class="d-flex align-items-center justify-content-center h-100 text-primary opacity-50">
+                <i class="fas fa-user-tie fa-5x"></i>
+              </div>
             {% endif %}
+
+            {% if teacher.is_featured %}
+              <span class="position-absolute top-0 end-0 m-2 badge rounded-pill px-2 py-1 text-dark shadow-sm"
+                    style="background: linear-gradient(135deg, #FACC15, #F59E0B); font-size: 0.7rem; font-weight: 700;">
+                <i class="fas fa-star me-1"></i> Yetakchi
+              </span>
+            {% endif %}
+          </div>
+
+          <!-- Name & Subject -->
+          <h4 class="fw-bold mb-1" style="font-size: 1.25rem;">{{ teacher.full_name }}</h4>
+          <p class="text-primary fw-semibold mb-2" style="font-size: 0.92rem;">{{ teacher.localized_subject }}</p>
+          <div>
+            <span class="badge rounded-pill px-3 py-1 mb-3" style="background: rgba(79,70,229,0.1); color: #4F46E5; font-size: 0.78rem;">
+              {{ teacher.localized_position }}
+            </span>
+          </div>
+
+          <hr class="my-3 text-muted opacity-25">
+
+          <!-- Meta specifications -->
+          <div class="text-start d-flex flex-column gap-3 small">
+            {% if teacher.department %}
+              <div class="d-flex align-items-start gap-2">
+                <i class="fas fa-layer-group text-primary mt-1"></i>
+                <div>
+                  <span class="text-muted d-block" style="font-size: 0.72rem;">{% trans "Kafedra / Yo'nalish" %}</span>
+                  <span class="fw-semibold text-dark">{{ teacher.department.localized_name }}</span>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if teacher.experience_years %}
+              <div class="d-flex align-items-start gap-2">
+                <i class="fas fa-history text-success mt-1"></i>
+                <div>
+                  <span class="text-muted d-block" style="font-size: 0.72rem;">{% trans "Pedagogik ish staji" %}</span>
+                  <span class="fw-semibold text-dark">{{ teacher.experience_years }} {% trans "yil" %}</span>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if teacher.education %}
+              <div class="d-flex align-items-start gap-2">
+                <i class="fas fa-graduation-cap text-warning mt-1"></i>
+                <div>
+                  <span class="text-muted d-block" style="font-size: 0.72rem;">{% trans "Ma'lumoti" %}</span>
+                  <span class="fw-semibold text-dark">{{ teacher.education }}</span>
+                </div>
+              </div>
+            {% endif %}
+
+            {% if teacher.email %}
+              <div class="d-flex align-items-start gap-2">
+                <i class="fas fa-envelope text-info mt-1"></i>
+                <div>
+                  <span class="text-muted d-block" style="font-size: 0.72rem;">{% trans "Elektron pochta" %}</span>
+                  <a href="mailto:{{ teacher.email }}" class="text-primary text-decoration-none fw-semibold text-break">{{ teacher.email }}</a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <!-- Back button -->
+          <div class="mt-4 pt-2">
+            <a href="{% url 'teachers:list' %}" class="btn btn-light border rounded-pill w-100 btn-sm text-secondary fw-semibold py-2">
+              <i class="fas fa-arrow-left me-1"></i> {% trans "Barcha ustozlar ro'yxati" %}
+            </a>
+          </div>
+
         </div>
+      </div>
+
+      <!-- BIO & COLLEAGUES (Right Column) -->
+      <div class="col-12 col-lg-8">
+        
+        <!-- Biography Card -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white mb-4">
+          <div class="d-flex align-items-center gap-3 mb-4 border-bottom pb-3">
+            <div class="rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(79,70,229,0.1); color: #4F46E5;">
+              <i class="fas fa-user-edit fs-5"></i>
+            </div>
+            <div>
+              <h4 class="fw-bold mb-0" style="font-size: 1.25rem;">{% trans "Ustoz haqida ma'lumot" %}</h4>
+              <small class="text-muted">19-sonli maktab pedagogik faoliyati</small>
+            </div>
+          </div>
+
+          <div class="text-dark" style="font-size: 1rem; line-height: 1.85;">
+            {% if teacher.localized_bio %}
+              {{ teacher.localized_bio|linebreaks }}
+            {% else %}
+              <p class="text-muted">
+                {{ teacher.full_name }} — 19-sonli umumiy o'rta ta'lim maktabida {{ teacher.localized_subject }} fani bo'yicha yuksak mahorat bilan yosh avlodga ta'lim va tarbiya berib kelayotgan yetakchi mutaxassis.
+              </p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Colleagues Section -->
+        {% if colleagues %}
+          <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2" style="font-size: 1.1rem;">
+              <i class="fas fa-users text-primary"></i>
+              <span>{% trans "Kafedraning boshqa ustozlari" %}</span>
+            </h5>
+            <div class="row row-cols-1 row-cols-sm-2 g-3">
+              {% for colleague in colleagues %}
+                <div class="col">
+                  <a href="{{ colleague.get_absolute_url }}" class="text-decoration-none">
+                    <div class="d-flex align-items-center gap-3 p-3 rounded-3 border bg-light h-100 transition-all teacher-colleague-item">
+                      <div class="rounded-3 overflow-hidden flex-shrink-0 bg-white border" style="width: 52px; height: 52px;">
+                        {% if colleague.photo %}
+                          <img src="{{ colleague.photo.url }}" alt="{{ colleague.full_name }}" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                        {% else %}
+                          <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                            <i class="fas fa-user"></i>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="flex-grow-1 overflow-hidden">
+                        <h6 class="mb-0 text-dark fw-bold text-truncate" style="font-size: 0.88rem;">{{ colleague.full_name }}</h6>
+                        <small class="text-primary d-block text-truncate fw-semibold" style="font-size: 0.75rem;">{{ colleague.localized_subject }}</small>
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.7rem;">{{ colleague.localized_position }}</small>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
     </div>
+  </div>
 </div>
 {% endblock %}

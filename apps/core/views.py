@@ -21,7 +21,7 @@ def home_view(request):
 
     site_settings_obj = SiteSettings.objects.first()
     statistics = Statistic.objects.filter(is_active=True).order_by('order')
-    featured_teachers = Teacher.objects.filter(is_active=True, is_featured=True).order_by('order')[:4]
+    featured_teachers = Teacher.objects.filter(is_active=True, is_featured=True).order_by('order')[:8]
     latest_news = News.objects.filter(status='published').order_by('-published_at', '-created_at')[:6]
     carousel_news = News.objects.filter(status='published').order_by('-is_featured', '-published_at')[:5]
     recent_achievements = Achievement.objects.filter(is_active=True).order_by('-date')[:4]

@@ -160,8 +160,8 @@
                 <div class="col-lg-3 col-md-6">
                     <h5 class="footer-title">{% trans "Aloqa" %}</h5>
                     <ul class="list-unstyled small text-muted d-flex flex-column gap-2">
-                        <li><i class="fas fa-map-marker-alt me-2 text-primary"></i> {{ site_settings.localized_address|default:"Toshkent shahar" }}</li>
-                        <li><i class="fas fa-phone me-2 text-primary"></i> {{ site_settings.phone|default:"+998 71 200-19-19" }}</li>
+                        <li><i class="fas fa-map-marker-alt me-2 text-primary"></i> {{ site_settings.localized_address|default:"Namangan viloyati, Namangan tumani, 19-maktab" }}</li>
+                        <li><i class="fas fa-phone me-2 text-primary"></i> {{ site_settings.phone|default:"+998 69 227-19-19" }}</li>
                         <li><i class="fas fa-envelope me-2 text-primary"></i> {{ site_settings.email|default:"info@maktab19.uz" }}</li>
                         <li><i class="fas fa-clock me-2 text-primary"></i> {{ site_settings.working_hours|default:"08:00 - 18:00" }}</li>
                     </ul>
@@ -179,6 +179,45 @@
             </div>
         </div>
     </footer>
+
+    <!-- MOBILE BOTTOM APP NAVIGATION BAR (Visible on mobile only) -->
+    <nav class="mobile-bottom-nav d-md-none position-fixed bottom-0 start-0 end-0 py-2 border-top shadow-lg" 
+         style="background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 1040;">
+      <div class="container-fluid px-2">
+        <div class="row g-0 text-center align-items-center">
+          <div class="col">
+            <a href="{% url 'home' %}" class="mobile-bottom-link d-flex flex-column align-items-center text-decoration-none {% if request.resolver_match.url_name == 'home' and not request.GET %}active text-primary{% else %}text-muted{% endif %}">
+              <i class="fas fa-home" style="font-size: 1.15rem;"></i>
+              <span style="font-size: 0.68rem; font-weight: 600; margin-top: 2px;">Bosh sahifa</span>
+            </a>
+          </div>
+          <div class="col">
+            <a href="{% url 'teachers:list' %}" class="mobile-bottom-link d-flex flex-column align-items-center text-decoration-none {% if 'teachers' in request.path %}active text-primary{% else %}text-muted{% endif %}">
+              <i class="fas fa-chalkboard-teacher" style="font-size: 1.15rem;"></i>
+              <span style="font-size: 0.68rem; font-weight: 600; margin-top: 2px;">Ustozlar</span>
+            </a>
+          </div>
+          <div class="col">
+            <a href="{% url 'news:list' %}" class="mobile-bottom-link d-flex flex-column align-items-center text-decoration-none {% if 'news' in request.path %}active text-primary{% else %}text-muted{% endif %}">
+              <i class="fas fa-newspaper" style="font-size: 1.15rem;"></i>
+              <span style="font-size: 0.68rem; font-weight: 600; margin-top: 2px;">Yangiliklar</span>
+            </a>
+          </div>
+          <div class="col">
+            <a href="{% url 'gallery' %}" class="mobile-bottom-link d-flex flex-column align-items-center text-decoration-none {% if request.resolver_match.url_name == 'gallery' %}active text-primary{% else %}text-muted{% endif %}">
+              <i class="fas fa-images" style="font-size: 1.15rem;"></i>
+              <span style="font-size: 0.68rem; font-weight: 600; margin-top: 2px;">Galereya</span>
+            </a>
+          </div>
+          <div class="col">
+            <a href="{% url 'contacts:contact' %}" class="mobile-bottom-link d-flex flex-column align-items-center text-decoration-none {% if 'contact' in request.path %}active text-primary{% else %}text-muted{% endif %}">
+              <i class="fas fa-phone-alt" style="font-size: 1.15rem;"></i>
+              <span style="font-size: 0.68rem; font-weight: 600; margin-top: 2px;">Aloqa</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

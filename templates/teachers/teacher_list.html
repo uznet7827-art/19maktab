@@ -1,90 +1,188 @@
 {% extends 'base.html' %}
 {% load i18n static %}
 
-{% block title %}{% trans "O'qituvchilar" %}{% endblock %}
+{% block title %}{% trans "Pedagogik jamoamiz" %} — {{ site_settings.localized_name|default:"19-maktab" }}{% endblock %}
 
 {% block content %}
-<div class="bg-light py-5 border-bottom">
-    <div class="container text-center">
-        <h1 class="fw-bold mb-2">{% trans "Maktabimiz pedagogik jamoasi" %}</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Bosh sahifa" %}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{% trans "O'qituvchilar" %}</li>
-            </ol>
-        </nav>
+<!-- PAGE HEADER -->
+<section class="teacher-header-section py-4 py-md-5 border-bottom" style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4F46E5 100%); color: #fff;">
+  <div class="container text-center">
+    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); font-size: 0.8rem; font-weight: 600;">
+      <i class="fas fa-graduation-cap text-warning"></i>
+      <span>19-sonli umumiy o'rta ta'lim maktabi</span>
     </div>
-</div>
+    <h1 class="fw-bold mb-2 text-white" style="font-size: clamp(1.6rem, 4vw, 2.4rem);">
+      {% trans "Maktabimiz Pedagogik Jamoasi" %}
+    </h1>
+    <p class="mb-3 mx-auto text-light opacity-90" style="max-width: 680px; font-size: clamp(0.85rem, 2vw, 1rem); line-height: 1.6;">
+      {% trans "O'quvchilarga chuqur bilim, yuksak ma'naviyat va zamonaviy tarbiya berib kelayotgan fidoyi va tajribali ustozlarimiz." %}
+    </p>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb justify-content-center mb-0" style="font-size: 0.82rem;">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-warning text-decoration-none"><i class="fas fa-home me-1"></i>{% trans "Bosh sahifa" %}</a></li>
+        <li class="breadcrumb-item active text-white opacity-75" aria-current="page">{% trans "O'qituvchilar" %}</li>
+      </ol>
+    </nav>
+  </div>
+</section>
 
-<section class="py-5">
-    <div class="container">
-        <!-- Search and Department Filters -->
-        <div class="row g-3 mb-5 align-items-center">
-            <div class="col-lg-7">
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'teachers:list' %}" class="btn {% if not selected_department %}btn-primary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-pill px-3">
-                        {% trans "Barcha kafedralar" %}
-                    </a>
-                    {% for dept in departments %}
-                        <a href="{% url 'teachers:list' %}?department={{ dept.id }}" class="btn {% if selected_department == dept %}btn-primary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-pill px-3">
-                            {{ dept.localized_name }}
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <form method="get" action="{% url 'teachers:list' %}" class="d-flex gap-2">
-                    {% if selected_department %}
-                        <input type="hidden" name="department" value="{{ selected_department.id }}">
-                    {% endif %}
-                    <input type="text" name="q" class="form-control form-control-sm rounded-pill px-3" placeholder="{% trans "Ustoz F.I.Sh yoki fani..." %}" value="{{ query }}">
-                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-4">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
+<!-- MAIN CONTENT -->
+<section class="py-4 py-md-5" style="background: #F8FAFC; min-height: 60vh;">
+  <div class="container">
 
-        <!-- Teachers Grid -->
-        <div class="row g-4">
-            {% if teachers %}
-                {% for teacher in teachers %}
-                    <div class="col-sm-6 col-md-4 col-lg-3 text-center">
-                        <div class="school-card p-4">
-                            <div class="teacher-avatar-wrapper">
-                                {% if teacher.photo %}
-                                    <img src="{{ teacher.photo.url }}" alt="{{ teacher.full_name }}">
-                                {% else %}
-                                    <i class="fas fa-user text-secondary fa-2x"></i>
-                                {% endif %}
-                            </div>
-                            <h5 class="fw-bold mb-1 fs-6">
-                                <a href="{{ teacher.get_absolute_url }}" class="text-dark text-decoration-none">
-                                    {{ teacher.full_name }}
-                                </a>
-                            </h5>
-                            <p class="text-primary small fw-semibold mb-1">{{ teacher.localized_subject }}</p>
-                            <p class="text-muted small mb-2">{{ teacher.localized_position }}</p>
-                            {% if teacher.experience_years %}
-                                <div class="badge bg-light text-secondary mb-3">
-                                    <i class="fas fa-briefcase me-1"></i> {{ teacher.experience_years }} {% trans "yil staj" %}
-                                </div>
-                            {% endif %}
-                            <div class="mt-auto">
-                                <a href="{{ teacher.get_absolute_url }}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">
-                                    {% trans "Profilni ko'rish" %}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center py-5">
-                    <i class="fas fa-chalkboard-teacher fa-4x text-muted mb-3"></i>
-                    <p class="text-muted">{% trans "Hech qanday o'qituvchi topilmadi." %}</p>
-                </div>
+    <!-- SEARCH & FILTER ROW -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="background: #fff;">
+      <div class="row g-3 align-items-center">
+        <!-- Search Form -->
+        <div class="col-12 col-md-5 order-md-2">
+          <form method="get" action="{% url 'teachers:list' %}" class="position-relative">
+            {% if selected_department %}
+              <input type="hidden" name="department" value="{{ selected_department.id }}">
             {% endif %}
+            <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted" style="pointer-events: none;"></i>
+            <input type="text" 
+                   name="q" 
+                   value="{{ query|default:'' }}" 
+                   class="form-control rounded-pill ps-5 pe-4 py-2" 
+                   placeholder="{% trans "Ustoz F.I.Sh yoki fani bo'yicha..." %}"
+                   aria-label="Qidiruv"
+                   style="font-size: 0.88rem; border-color: #E2E8F0;">
+            {% if query %}
+              <a href="{% url 'teachers:list' %}{% if selected_department %}?department={{ selected_department.id }}{% endif %}" 
+                 class="position-absolute top-50 end-0 translate-middle-y me-3 text-muted" title="Tozalash">
+                <i class="fas fa-times-circle"></i>
+              </a>
+            {% endif %}
+          </form>
         </div>
+
+        <!-- Filter Chips (Scrollable on mobile) -->
+        <div class="col-12 col-md-7 order-md-1">
+          <div class="teacher-filter-scroll d-flex gap-2 pb-1" style="overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+            <a href="{% url 'teachers:list' %}{% if query %}?q={{ query }}{% endif %}" 
+               class="btn btn-sm rounded-pill px-3 py-2 flex-shrink-0 fw-semibold transition-all {% if not selected_department %}btn-primary text-white shadow-sm{% else %}btn-light text-secondary border{% endif %}"
+               style="font-size: 0.82rem;">
+              <i class="fas fa-th-large me-1"></i> {% trans "Barchasi" %}
+            </a>
+            {% for dept in departments %}
+              <a href="{% url 'teachers:list' %}?department={{ dept.id }}{% if query %}&q={{ query }}{% endif %}" 
+                 class="btn btn-sm rounded-pill px-3 py-2 flex-shrink-0 fw-semibold transition-all {% if selected_department == dept %}btn-primary text-white shadow-sm{% else %}btn-light text-secondary border{% endif %}"
+                 style="font-size: 0.82rem;">
+                {{ dept.localized_name }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Active filter alert (if any) -->
+    {% if selected_department or query %}
+      <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+        <small class="text-muted">
+          {% if selected_department %}
+            <span class="badge bg-primary me-2">{{ selected_department.localized_name }}</span>
+          {% endif %}
+          {% if query %}
+            <span>"{% trans "Qidiruv" %}: <strong>{{ query }}</strong>"</span>
+          {% endif %}
+          — {{ teachers|length }} {% trans "nafar ustoz topildi" %}
+        </small>
+        <a href="{% url 'teachers:list' %}" class="text-decoration-none small text-danger fw-semibold">
+          <i class="fas fa-undo me-1"></i> {% trans "Filtrni tozalash" %}
+        </a>
+      </div>
+    {% endif %}
+
+    <!-- TEACHERS GRID -->
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+      {% for teacher in teachers %}
+      <div class="col">
+        <div class="teacher-card-modern h-100 d-flex flex-column bg-white rounded-4 shadow-sm border border-0 overflow-hidden position-relative transition-all">
+          
+          <!-- Photo wrapper -->
+          <div class="teacher-card-img-wrap position-relative bg-light" style="aspect-ratio: 1 / 1; width: 100%; overflow: hidden;">
+            {% if teacher.photo %}
+              <img src="{{ teacher.photo.url }}" 
+                   alt="{{ teacher.full_name }}" 
+                   class="teacher-card-img w-100 h-100" 
+                   style="object-fit: cover; object-position: top center; transition: transform 0.4s ease;"
+                   loading="lazy">
+            {% else %}
+              <div class="d-flex align-items-center justify-content-center w-100 h-100 text-primary" style="background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);">
+                <i class="fas fa-user-tie fa-3x opacity-50"></i>
+              </div>
+            {% endif %}
+
+            <!-- Experience Badge -->
+            {% if teacher.experience_years %}
+              <span class="position-absolute bottom-0 start-0 m-2 badge rounded-pill px-2 py-1 text-white shadow-sm" 
+                    style="background: rgba(15, 23, 42, 0.82); backdrop-filter: blur(4px); font-size: 0.68rem; font-weight: 600;">
+                <i class="fas fa-award text-warning me-1"></i>{{ teacher.experience_years }}+ {% trans "yil" %}
+              </span>
+            {% endif %}
+
+            <!-- Category / Star badge -->
+            {% if teacher.is_featured %}
+              <span class="position-absolute top-0 end-0 m-2 badge rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm"
+                    style="width: 24px; height: 24px; background: linear-gradient(135deg, #FACC15, #F59E0B); color: #111;" title="Yetakchi ustoz">
+                <i class="fas fa-star" style="font-size: 0.65rem;"></i>
+              </span>
+            {% endif %}
+          </div>
+
+          <!-- Card Body -->
+          <div class="teacher-card-body p-3 d-flex flex-column flex-grow-1 text-center">
+            <!-- Full Name -->
+            <h6 class="teacher-name fw-bold mb-1" style="font-size: clamp(0.85rem, 2.2vw, 0.98rem); line-height: 1.3;">
+              <a href="{{ teacher.get_absolute_url }}" class="text-dark text-decoration-none">
+                {{ teacher.full_name }}
+              </a>
+            </h6>
+
+            <!-- Subject Badge -->
+            <div class="mb-1">
+              <span class="badge rounded-pill px-2 py-1" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5; font-size: 0.72rem; font-weight: 600;">
+                {{ teacher.localized_subject }}
+              </span>
+            </div>
+
+            <!-- Position -->
+            <p class="text-muted mb-3 flex-grow-1" style="font-size: 0.73rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              {{ teacher.localized_position }}
+            </p>
+
+            <!-- CTA Button -->
+            <div class="mt-auto">
+              <a href="{{ teacher.get_absolute_url }}" 
+                 class="btn btn-outline-primary btn-sm rounded-pill w-100 fw-semibold py-1 py-md-2"
+                 style="font-size: clamp(0.72rem, 1.8vw, 0.82rem); border-width: 1.5px;">
+                {% trans "Batafsil" %} <i class="fas fa-chevron-right ms-1" style="font-size: 0.65rem;"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+        <div class="card border-0 rounded-4 shadow-sm p-5 mx-auto" style="max-width: 500px; background: #fff;">
+          <div class="mb-3">
+            <i class="fas fa-user-slash fa-4x text-muted opacity-50"></i>
+          </div>
+          <h4 class="fw-bold mb-2">{% trans "O'qituvchi topilmadi" %}</h4>
+          <p class="text-muted small mb-4">
+            {% trans "Kiritilgan so'rov yoki tanlangan kafedra bo'yicha ma'lumot chiqmadi. Iltimos, boshqa qidiruv so'zini sinab ko'ring." %}
+          </p>
+          <div>
+            <a href="{% url 'teachers:list' %}" class="btn btn-primary rounded-pill px-4 btn-sm">
+              <i class="fas fa-users me-1"></i> {% trans "Barcha ustozlarni ko'rish" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
 </section>
 {% endblock %}
