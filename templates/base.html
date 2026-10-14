@@ -19,12 +19,13 @@
     <!-- Bootstrap Override CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- SEO & Social Sharing (Open Graph / Telegram / WhatsApp) -->
-    <meta name="description" content="{% block meta_description %}{{ site_settings.localized_name|default:'19-maktab' }} — Namangan viloyati, Namangan tumani, Mullakudung hududidagi 19-umumiy o'rta ta'lim maktabi rasmiy veb-sayti.{% endblock %}">
-    <meta property="og:site_name" content="19-Maktab (Namangan, Mullakudung)">
-    <meta property="og:title" content="{% block og_title %}{{ site_settings.localized_name|default:'19-Maktab' }} — Namangan tumani, Mullakudung{% endblock %}">
+    <meta name="description" content="{% block meta_description %}19-maktab - Namangan viloyati, Namangan tumani, Mullakudung 19-umumiy o'rta ta'lim maktabi rasmiy sayti.{% endblock %}">
+    <meta property="og:site_name" content="19-Maktab (Namangan tumani, Mullakudung)">
+    <meta property="og:title" content="{% block og_title %}19-Maktab - Namangan tumani, Mullakudung{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Namangan viloyati, Namangan tumani, Mullakudung 19-sonli umumiy o'rta ta'lim maktabi rasmiy veb-sayti. Sifatli ta'lim, yetakchi yoshlar va yorqin kelajak poydevori!{% endblock %}">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="{% block og_image %}{% if site_settings.hero_image %}{{ site_settings.hero_image.url }}{% else %}/media/site/hero_school.jpg{% endif %}{% endblock %}">
+    <meta property="og:url" content="https://one9maktab-nmg.onrender.com/">
+    <meta property="og:image" content="https://one9maktab-nmg.onrender.com/media/site/hero_school.jpg">
     <meta name="twitter:card" content="summary_large_image">
 
     <style>
