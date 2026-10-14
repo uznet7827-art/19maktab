@@ -3283,5 +3283,32 @@ img {
   body, html {
     overflow-x: hidden;
   }
+
+  /* Hero Showcase on mobile */
+  .hero-showcase-container {
+    margin-top: 1.5rem;
+  }
+  .floating-hero-badge {
+    position: static !important;
+    margin: 0.5rem auto !important;
+    max-width: 240px;
+  }
 }
+
+/* Floating Hero Badge Animation */
+.floating-hero-badge {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: floatHeroBadge 4.5s ease-in-out infinite alternate;
+}
+.hero-badge-top {
+  animation-delay: 0s;
+}
+.hero-badge-bottom {
+  animation-delay: -2.25s;
+}
+@keyframes floatHeroBadge {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-7px); }
+}
+
 
