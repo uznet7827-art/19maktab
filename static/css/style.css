@@ -11,6 +11,11 @@
   --text-muted: #6B7280;
 }
 
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw;
+}
+
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: #1f2937;
@@ -329,246 +334,346 @@ html {
 }
 
 /* ==========================================================================
-   ULTRA-RESPONSIVE COMPACT PHONE DESIGN (≤ 768px and ≤ 480px)
-   Kichik va ixcham, telefonda katta bo'lib ketmaydigan zamonaviy UI
+   ULTRA-POLISHED MODERN MOBILE & RESPONSIVE DESIGN SYSTEM
+   Professional, comfortable, highly legible, touch-friendly UI
    ========================================================================== */
+
+/* Mobile Bottom Safe Area & Body Padding */
+@media (max-width: 767.98px) {
+  body {
+    padding-bottom: 72px !important; /* Never overlap with bottom bar */
+  }
+}
+
+/* 1. Header & Mobile Dropdown Navigation */
 @media (max-width: 991.98px) {
+  .navbar-toggler {
+    padding: 0.35rem 0.5rem !important;
+    border-radius: 8px !important;
+    background: rgba(79, 70, 229, 0.06) !important;
+  }
+  .navbar-toggler i {
+    color: var(--primary, #4F46E5) !important;
+  }
   .navbar-collapse {
     background: #ffffff;
-    border-radius: 14px;
-    padding: 0.85rem 1rem;
+    border-radius: 18px;
+    padding: 1.1rem 1.25rem;
     margin-top: 0.75rem;
-    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(79, 70, 229, 0.1);
   }
+  .navbar-nav {
+    gap: 0.35rem;
+  }
   .navbar-nav .nav-link {
-    padding: 0.45rem 0.75rem !important;
-    font-size: 0.85rem !important;
+    padding: 0.65rem 0.95rem !important;
+    font-size: 0.95rem !important;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
+    color: #334155 !important;
   }
   .navbar-nav .nav-link:hover,
   .navbar-nav .nav-link.active {
     background: rgba(79, 70, 229, 0.08);
-    color: var(--primary) !important;
+    color: var(--primary, #4F46E5) !important;
   }
 }
 
+/* 2. Global Mobile Typography & Touch Ergonomics (<= 768px) */
 @media (max-width: 768px) {
-  /* Sections global padding */
+  /* Section Spacing */
   .py-5 {
-    padding-top: 1.85rem !important;
-    padding-bottom: 1.85rem !important;
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
   }
   .py-4 {
-    padding-top: 1.25rem !important;
-    padding-bottom: 1.25rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
   }
 
-  /* Typography scale down */
+  /* Typography: Readable & Well-Proportioned */
   .hero-section {
-    padding: 2.25rem 0 !important;
+    padding: 2.5rem 0 2rem !important;
   }
   .hero-title {
-    font-size: 1.55rem !important;
+    font-size: 1.85rem !important;
     line-height: 1.25 !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
   }
   .hero-subtitle {
-    font-size: 0.85rem !important;
-    margin-top: 0.5rem !important;
-    margin-bottom: 1.25rem !important;
-    line-height: 1.45 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+  }
+  .hero-photo-frame {
+    height: 230px !important;
+    max-width: 100% !important;
+    border-radius: 18px !important;
   }
 
-  /* Buttons */
+  /* Section Titles */
+  .section-title {
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+  }
+  .section-label {
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+  }
+
+  /* Buttons: Touch-Friendly (min 42px height) */
   .btn-lg {
-    padding: 0.45rem 1.1rem !important;
-    font-size: 0.82rem !important;
-    border-radius: 50px !important;
+    padding: 0.65rem 1.4rem !important;
+    font-size: 0.92rem !important;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .btn {
-    padding: 0.38rem 0.9rem !important;
-    font-size: 0.8rem !important;
-    border-radius: 50px !important;
+    padding: 0.55rem 1.15rem !important;
+    font-size: 0.88rem !important;
+    font-weight: 600;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .btn-sm {
-    padding: 0.28rem 0.75rem !important;
-    font-size: 0.73rem !important;
+    padding: 0.4rem 0.9rem !important;
+    font-size: 0.82rem !important;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Stats */
+  /* Stats Section: 2x2 Grid with Crisp Numbers */
   .stat-card {
-    padding: 0.75rem 0.5rem !important;
-    border-radius: 10px !important;
+    padding: 1.1rem 0.75rem !important;
+    border-radius: 14px !important;
     border-bottom-width: 3px !important;
   }
   .stat-value {
-    font-size: 1.35rem !important;
-    margin-top: 0.25rem !important;
+    font-size: 1.7rem !important;
+    font-weight: 800 !important;
+    margin-top: 0.35rem !important;
+    line-height: 1.1 !important;
   }
   .stat-title {
-    font-size: 0.7rem !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
   }
   .stat-card i {
-    font-size: 1.25rem !important;
+    font-size: 1.5rem !important;
   }
 
-  /* School Cards & Images */
-  .school-card {
-    border-radius: 10px !important;
+  /* Mini Info Cards in Bizning Maktab */
+  .mini-info-card {
+    padding: 0.75rem 0.5rem !important;
+    border-radius: 12px !important;
+    gap: 0.25rem !important;
   }
-  .card-img-wrapper {
-    height: 130px !important;
+  .mini-info-card i {
+    font-size: 1.15rem !important;
   }
-  .card-body {
-    padding: 0.85rem !important;
-  }
-  .school-card h5 {
-    font-size: 0.88rem !important;
-    line-height: 1.3 !important;
-  }
-  .school-card p {
-    font-size: 0.75rem !important;
-    line-height: 1.4 !important;
-  }
-
-  /* Section Headers */
-  .section-title {
-    font-size: 1.2rem !important;
-  }
-  .section-label {
-    font-size: 0.68rem !important;
-  }
-
-  /* Teacher Avatar */
-  .teacher-avatar-wrapper {
-    width: 65px !important;
-    height: 65px !important;
-    margin: 0.75rem auto 0.5rem !important;
+  .mini-info-card span {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    word-break: normal !important;
   }
 
   /* Director Card */
   .director-card {
-    padding: 1.25rem 1rem !important;
+    padding: 1.5rem 1.25rem !important;
+    border-radius: 18px !important;
+  }
+  .director-photo-wrapper {
+    width: 130px !important;
+    height: 165px !important;
     border-radius: 14px !important;
-  }
-  .director-photo,
-  .director-photo-placeholder {
-    width: 85px !important;
-    height: 85px !important;
-  }
-  .director-quote-mark {
-    font-size: 2.8rem !important;
   }
   .director-message-text {
-    font-size: 0.82rem !important;
-    line-height: 1.55 !important;
+    font-size: 0.92rem !important;
+    line-height: 1.75 !important;
+    text-align: left;
+  }
+  .director-quote-mark {
+    font-size: 3rem !important;
+    margin-bottom: -0.75rem !important;
   }
 
-  /* Spotlight Card (Best Student & Best Teacher) */
-  .spotlight-card {
-    padding: 1.15rem 0.9rem !important;
-    border-radius: 14px !important;
-    gap: 1rem !important;
+  /* News Carousel & Mini News */
+  .carousel-hero-slide {
+    min-height: 250px !important;
+    padding: 1.25rem 1rem !important;
+    border-radius: 16px !important;
   }
-  .spotlight-badge-circle {
-    width: 85px !important;
-    height: 85px !important;
-    font-size: 2rem !important;
-  }
-  .spotlight-name {
-    font-size: 1.05rem !important;
-  }
-  .spotlight-achievement {
-    font-size: 0.85rem !important;
-  }
-  .trophy-badge {
-    font-size: 0.68rem !important;
-    padding: 0.2rem 0.7rem !important;
-  }
-  .spotlight-type-badge {
-    font-size: 0.68rem !important;
-    padding: 0.25rem 0.75rem !important;
-  }
-
-  /* News Mini Cards */
   .news-mini-img {
-    height: 110px !important;
+    height: 170px !important;
   }
   .news-mini-body {
-    padding: 0.75rem !important;
+    padding: 1rem !important;
   }
   .news-mini-title {
-    font-size: 0.82rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.35 !important;
   }
   .news-mini-excerpt {
-    font-size: 0.72rem !important;
-    line-height: 1.4 !important;
+    font-size: 0.84rem !important;
+    line-height: 1.5 !important;
   }
 
-  /* Navbar Brand */
-  .navbar-brand {
-    font-size: 1.05rem !important;
+  /* Spotlight Cards (Best Student & Teacher) */
+  .spotlight-card {
+    padding: 1.5rem 1.25rem !important;
+    border-radius: 18px !important;
+    gap: 1.25rem !important;
   }
-  .navbar-brand span.rounded-circle {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.85rem !important;
+  .spotlight-badge-circle {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 2.2rem !important;
+  }
+  .spotlight-name {
+    font-size: 1.2rem !important;
+  }
+  .spotlight-achievement {
+    font-size: 0.92rem !important;
+  }
+
+  /* Teacher Cards on Mobile */
+  .teacher-home-card {
+    border-radius: 16px !important;
+  }
+  .teacher-home-card .p-3 {
+    padding: 0.75rem 0.65rem !important;
+  }
+  .teacher-home-card h6 {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+  }
+  .teacher-home-card .badge {
+    font-size: 0.72rem !important;
+  }
+  .teacher-home-card p {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Mobile Bottom App Navigation Bar */
+  .mobile-bottom-nav {
+    height: 60px;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+    z-index: 1045 !important;
+  }
+  .mobile-bottom-link {
+    color: #64748B !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0;
+    transition: all 0.2s ease;
+  }
+  .mobile-bottom-link i {
+    font-size: 1.2rem !important;
+    transition: transform 0.2s ease;
+  }
+  .mobile-bottom-link span {
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    margin-top: 2px;
+  }
+  .mobile-bottom-link.active,
+  .mobile-bottom-link.active i,
+  .mobile-bottom-link.active span {
+    color: var(--primary, #4F46E5) !important;
+  }
+  .mobile-bottom-link:active i {
+    transform: scale(0.9);
   }
 
   /* Footer */
   footer {
-    padding: 2rem 0 1rem !important;
-    margin-top: 2rem !important;
+    padding: 2.25rem 0 1.5rem !important;
   }
   footer .footer-title {
-    font-size: 0.88rem !important;
-    margin-bottom: 0.65rem !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.75rem !important;
   }
   footer ul, footer p {
-    font-size: 0.73rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
   }
 }
 
+/* 3. Small Smartphones (<= 480px) */
 @media (max-width: 480px) {
-  /* Extra compact styling for small smartphones */
   .container {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 0.9rem !important;
+    padding-right: 0.9rem !important;
   }
   .hero-title {
-    font-size: 1.35rem !important;
+    font-size: 1.65rem !important;
   }
   .stat-value {
-    font-size: 1.15rem !important;
+    font-size: 1.55rem !important;
   }
   .stat-card {
-    padding: 0.6rem 0.35rem !important;
+    padding: 0.9rem 0.6rem !important;
   }
   .stat-title {
-    font-size: 0.65rem !important;
+    font-size: 0.78rem !important;
   }
-  .school-emblem {
-    width: 70px !important;
-    height: 70px !important;
-    font-size: 1.75rem !important;
+  .hero-photo-frame {
+    height: 200px !important;
   }
-  .mini-info-card {
-    padding: 0.5rem 0.35rem !important;
-  }
-  .mini-info-card i {
-    font-size: 0.9rem !important;
-  }
-  .mini-info-card span {
-    font-size: 0.65rem !important;
-  }
-  .mobile-quick-chip {
-    padding: 0.3rem 0.65rem !important;
-    font-size: 0.68rem !important;
-  }
+}
+
+/* Dark Mode Overrides for Mobile Components */
+[data-theme='dark'] .navbar-toggler {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+[data-theme='dark'] .navbar-toggler i {
+  color: #F8FAFC !important;
+}
+[data-theme='dark'] .navbar-collapse {
+  background: #111827 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+}
+[data-theme='dark'] .navbar-nav .nav-link {
+  color: #CBD5E1 !important;
+}
+[data-theme='dark'] .navbar-nav .nav-link:hover,
+[data-theme='dark'] .navbar-nav .nav-link.active {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+[data-theme='dark'] .mobile-bottom-nav {
+  background: rgba(15, 23, 42, 0.96) !important;
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+[data-theme='dark'] .mobile-bottom-link {
+  color: #94A3B8 !important;
+}
+[data-theme='dark'] .mobile-bottom-link.active,
+[data-theme='dark'] .mobile-bottom-link.active i,
+[data-theme='dark'] .mobile-bottom-link.active span {
+  color: #38BDF8 !important;
 }
 
 /* ==========================================================================

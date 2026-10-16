@@ -40,8 +40,7 @@
 
       <!-- RIGHT COLUMN: Clean school photo -->
       <div class="col-lg-5 text-center">
-        <div class="hero-photo-frame mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-20" 
-             style="max-width: 440px; height: 320px; background: #1E293B;">
+        <div class="hero-photo-frame mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-20">
           {% if site_settings.hero_image %}
             <img src="{{ site_settings.hero_image.url }}" alt="19-maktab" class="w-100 h-100" style="object-fit: cover;">
           {% else %}
@@ -58,9 +57,9 @@
      STATISTICS
 ═══════════════════════════════════════════════════════════ -->
 {% if statistics %}
-<section class="py-4" style="margin-top:-2rem;" id="statistika">
+<section class="py-4 stats-section-wrap" id="statistika">
   <div class="container">
-    <div class="row g-3">
+    <div class="row g-2 g-sm-3">
       {% for stat in statistics %}
       <div class="col-6 col-md-3">
         <div class="stat-card">
@@ -78,11 +77,11 @@
 <!-- ═══════════════════════════════════════════════════════════
      BIZNING MAKTAB  (anchor target)
 ═══════════════════════════════════════════════════════════ -->
-<section class="py-5 bg-white border-top" id="bizning-maktab">
+<section class="py-4 py-md-5 bg-white border-top" id="bizning-maktab">
   <div class="container">
     <div class="row align-items-center g-4">
-      <!-- Icon / emblem -->
-      <div class="col-md-4 text-center">
+      <!-- Icon / emblem (desktop only) -->
+      <div class="col-md-4 text-center d-none d-md-block">
         <div class="school-emblem-wrap">
           <div class="school-emblem">
             <i class="fas fa-school"></i>
@@ -99,22 +98,22 @@
       <div class="col-md-8">
         <div class="section-label">🏫 Bizning maktab</div>
         <h2 class="section-title">{{ site_settings.localized_name|default:"19-umumiy o'rta ta'lim maktabi" }}</h2>
-        <p class="text-muted mb-4" style="line-height:1.8;">
+        <p class="text-muted mb-4" style="line-height:1.75; font-size: 0.95rem;">
           {{ site_settings.localized_about|default:"19-umumiy o'rta ta'lim maktabi zamonaviy ta'lim standartlariga mos, yuksak ma'naviyatli, chuqur bilimli yoshlarni tarbiyalashni o'z oldiga maqsad qilib qo'ygan. Maktabimizda barcha zamonaviy sharoitlar, fan laboratoriyalari, sport zallari va zamonaviy axborot texnologiyalari bilan jihozlangan sinfxonalar mavjud." }}
         </p>
         <!-- Mini info cards row -->
         <div class="row g-2">
           <div class="col-6 col-sm-3">
-            <div class="mini-info-card" style="--mc:var(--royal-blue)">
+            <a href="tel:{{ site_settings.phone|default:'+998692271919' }}" class="mini-info-card text-decoration-none" style="--mc:var(--royal-blue)">
               <i class="fas fa-phone"></i>
               <span>{{ site_settings.phone|default:"+998 69 227-19-19" }}</span>
-            </div>
+            </a>
           </div>
           <div class="col-6 col-sm-3">
-            <div class="mini-info-card" style="--mc:var(--electric-cyan)">
+            <a href="mailto:{{ site_settings.email|default:'info@maktab19.uz' }}" class="mini-info-card text-decoration-none" style="--mc:var(--electric-cyan)">
               <i class="fas fa-envelope"></i>
               <span>{{ site_settings.email|default:"info@maktab19.uz" }}</span>
-            </div>
+            </a>
           </div>
           <div class="col-6 col-sm-3">
             <div class="mini-info-card" style="--mc:#10B981">
@@ -125,7 +124,7 @@
           <div class="col-6 col-sm-3">
             <div class="mini-info-card" style="--mc:#8B5CF6">
               <i class="fas fa-map-marker-alt"></i>
-              <span>{{ site_settings.localized_address|default:"Namangan tumani" }}</span>
+              <span>{{ site_settings.localized_address|default:"Mullakudung" }}</span>
             </div>
           </div>
         </div>
@@ -148,9 +147,9 @@
       <div class="section-label">👨‍💼 Bizning direktor</div>
       <h2 class="section-title">Rahbariyat murojaati</h2>
     </div>
-    <div class="director-card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white">
+    <div class="director-card shadow-sm border-0 rounded-4 p-3 p-md-4 p-lg-5 bg-white">
       <div class="director-photo-col text-center">
-        <div class="director-photo-wrapper mx-auto mb-3 shadow-sm rounded-4 overflow-hidden border border-3 border-light" style="width: 170px; height: 215px; background: #EEF2FF;">
+        <div class="director-photo-wrapper mx-auto mb-3 shadow-sm rounded-4 overflow-hidden border border-3 border-light">
           {% if site_settings.director_photo %}
             <img src="{{ site_settings.director_photo.url }}"
                  alt="{{ site_settings.director_name }}" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
