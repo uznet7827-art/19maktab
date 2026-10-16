@@ -5,4 +5,5 @@ app_name = 'contacts'
 
 urlpatterns = [
     path('', views.contact_view, name='contact'),
+    path('export-excel/', views.export_contacts_excel_view, name='export_excel'),
 ]

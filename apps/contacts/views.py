@@ -3,10 +3,13 @@ from django.contrib import messages
 from django.utils import timezone
 from django.core.cache import cache
 from datetime import timedelta
-from django.http import JsonResponse
+import os
+from django.http import JsonResponse, FileResponse, HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import ContactForm
 from .models import Contact
+from .excel_service import sync_contact_to_excel, export_all_contacts_to_excel, EXCEL_FILE_PATH
 from apps.core.models import SiteSettings
 
 
@@ -75,6 +78,9 @@ def contact_view(request):
             contact_instance.ip_address = ip_address
             contact_instance.save()
 
+            # Automatically sync to Excel file
+            sync_contact_to_excel(contact_instance)
+
             increment_rate_limit(ip_address)
 
             success_message = "Murojaatingiz muvaffaqiyatli qabul qilindi! Tez orada siz bilan bog'lanamiz."
@@ -93,3 +99,22 @@ def contact_view(request):
         'form': form,
         'site_settings': site_settings_obj,
     })
+
+
+@staff_member_required(login_url='/admin/login/')
+def export_contacts_excel_view(request):
+    """
+    Allows school administration / staff to download all contact inquiries
+    as an Excel (.xlsx) spreadsheet at any time.
+    """
+    excel_path = export_all_contacts_to_excel()
+    if os.path.exists(excel_path):
+        filename = f"19-maktab-murojaatlar-{timezone.now().strftime('%Y-%m-%d')}.xlsx"
+        response = FileResponse(
+            open(excel_path, 'rb'),
+            as_attachment=True,
+            filename=filename,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        return response
+    return HttpResponse("Excel fayli topilmadi", status=404)

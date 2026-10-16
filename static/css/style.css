@@ -628,14 +628,32 @@ html {
   .hero-title {
     font-size: 1.65rem !important;
   }
-  .stat-value {
-    font-size: 1.55rem !important;
-  }
   .stat-card {
-    padding: 0.9rem 0.6rem !important;
+    padding: 0.85rem 0.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    justify-content: center !important;
+    gap: 0.2rem !important;
+  }
+  .stat-card i {
+    font-size: 1.45rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .stat-value {
+    font-size: 1.45rem !important;
+    text-align: center !important;
+    line-height: 1.15 !important;
   }
   .stat-title {
     font-size: 0.78rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.25 !important;
+    width: 100% !important;
   }
   .hero-photo-frame {
     height: 200px !important;

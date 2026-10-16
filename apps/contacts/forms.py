@@ -8,6 +8,23 @@ class ContactForm(forms.ModelForm):
         error_messages={'required': "Maxfiylik siyosatiga rozilik bildirishingiz shart."}
     )
 
+    def __init__(self, *args, **kwargs):
+        if args and len(args) > 0 and hasattr(args[0], 'copy'):
+            data = args[0].copy()
+            if 'privacy' in data and 'privacy_agreed' not in data:
+                data['privacy_agreed'] = data['privacy']
+            if data.get('contact_type') == 'inquiry':
+                data['contact_type'] = 'general'
+            args = (data,) + args[1:]
+        elif 'data' in kwargs and hasattr(kwargs['data'], 'copy'):
+            data = kwargs['data'].copy()
+            if 'privacy' in data and 'privacy_agreed' not in data:
+                data['privacy_agreed'] = data['privacy']
+            if data.get('contact_type') == 'inquiry':
+                data['contact_type'] = 'general'
+            kwargs['data'] = data
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Contact
         fields = ['full_name', 'phone', 'email', 'contact_type', 'subject', 'message', 'privacy_agreed']

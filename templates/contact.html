@@ -107,10 +107,11 @@
             <label for="id_contact_type">Murojaat turi *</label>
             <select id="id_contact_type" name="contact_type" class="form-control" required>
               <option value="">Tanlang...</option>
+              <option value="general">Umumiy ma'lumot</option>
               <option value="admission">O'quvchi qabuli bo'yicha</option>
-              <option value="inquiry">Umumiy ma'lumot</option>
               <option value="suggestion">Taklif yoki mulohaza</option>
               <option value="complaint">Ariza / shikoyat</option>
+              <option value="other">Boshqa</option>
             </select>
             <div class="form-feedback">Iltimos, murojaat turini tanlang.</div>
           </div>
@@ -138,8 +139,8 @@
           </div>
 
           <div class="form-checkbox-wrap">
-            <input type="checkbox" id="id_privacy" name="privacy" class="form-checkbox" required>
-            <label for="id_privacy" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
+            <input type="checkbox" id="id_privacy_agreed" name="privacy_agreed" class="form-checkbox" required>
+            <label for="id_privacy_agreed" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
               Shaxsiy ma'lumotlarim qayta ishlanishiga roziman
             </label>
           </div>

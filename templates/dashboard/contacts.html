@@ -9,8 +9,8 @@
         <small class="text-muted">Ota-onalar va o'quvchilar xabarlari</small>
     </div>
 
-    <!-- Filter chips -->
-    <div class="d-flex gap-1 flex-wrap">
+    <!-- Filter chips and Excel download -->
+    <div class="d-flex gap-1 flex-wrap align-items-center">
         <a href="{% url 'dashboard_contacts' %}" class="btn btn-sm rounded-pill px-3 {% if not status_filter %}btn-primary{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
             Barchasi
         </a>
@@ -22,6 +22,9 @@
         </a>
         <a href="{% url 'dashboard_contacts' %}?status=replied" class="btn btn-sm rounded-pill px-3 {% if status_filter == 'replied' %}btn-success text-white{% else %}btn-light border{% endif %}" style="font-size: 0.75rem;">
             Javob berilgan
+        </a>
+        <a href="{% url 'contacts:export_excel' %}" class="btn btn-sm btn-success text-white rounded-pill px-3 ms-2 shadow-sm" style="font-size: 0.75rem;" title="Barcha murojaatlarni Excel formatida yuklab olish">
+            <i class="fas fa-file-excel me-1"></i> Excelga yuklab olish
         </a>
     </div>
 </div>

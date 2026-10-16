@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils import timezone
+from django.http import FileResponse
+import os
+
 from .models import Contact
+from .excel_service import export_all_contacts_to_excel, sync_contact_to_excel
 
 
 @admin.register(Contact)
@@ -10,7 +14,7 @@ class ContactAdmin(admin.ModelAdmin):
     list_filter = ('status', 'contact_type', 'created_at')
     search_fields = ('full_name', 'phone', 'email', 'subject', 'message', 'admin_reply')
     readonly_fields = ('ip_address', 'created_at', 'replied_at')
-    actions = ['mark_as_read', 'mark_as_closed']
+    actions = ['mark_as_read', 'mark_as_closed', 'export_to_excel']
 
     fieldsets = (
         ("Murojaatchi ma'lumotlari", {
@@ -73,9 +77,16 @@ class ContactAdmin(admin.ModelAdmin):
     def mark_as_read(self, request, queryset):
         queryset.update(status='read')
 
-    @admin.action(description="Yopilgan deb belgilash")
-    def mark_as_closed(self, request, queryset):
-        queryset.update(status='closed')
+    @admin.action(description="Tanlangan murojaatlarni Excel (.xlsx) ga yuklab olish")
+    def export_to_excel(self, request, queryset):
+        excel_path = export_all_contacts_to_excel(queryset=queryset)
+        filename = f"murojaatlar-{timezone.now().strftime('%Y-%m-%d')}.xlsx"
+        return FileResponse(
+            open(excel_path, 'rb'),
+            as_attachment=True,
+            filename=filename,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
 
     def save_model(self, request, obj, form, change):
         if obj.admin_reply and not obj.replied_at:
@@ -83,3 +94,4 @@ class ContactAdmin(admin.ModelAdmin):
             if obj.status == 'new' or obj.status == 'read':
                 obj.status = 'replied'
         super().save_model(request, obj, form, change)
+        sync_contact_to_excel(obj)

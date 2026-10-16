@@ -836,10 +836,13 @@ p:last-child {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 2rem 1.75rem;
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
+  padding: 1.5rem 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
   box-shadow: var(--shadow);
   transition: all var(--transition-normal);
   position: relative;
@@ -899,19 +902,27 @@ p:last-child {
 }
 
 .stat-value {
-  font-size: 2.25rem;
+  font-size: 1.85rem !important;
   font-weight: 800;
   font-family: var(--font-heading);
   color: var(--text);
   line-height: 1.1;
   letter-spacing: -0.02em;
+  text-align: center !important;
+  margin: 0 !important;
 }
 
 .stat-title {
-  font-size: 0.9rem;
+  font-size: 0.88rem !important;
   color: var(--text-muted);
   font-weight: 600;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.35 !important;
+  width: 100% !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -3112,9 +3123,33 @@ p:last-child {
   p  { font-size: .87rem !important; }
 
   /* Stat cards compact */
-  .stat-card { padding: .8rem .5rem !important; }
-  .stat-value { font-size: 1.4rem !important; }
-  .stat-title { font-size: .7rem !important; }
+  .stat-card {
+    padding: 0.95rem 0.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+  }
+  .stat-card i {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+  .stat-value {
+    font-size: 1.55rem !important;
+    text-align: center !important;
+    line-height: 1.15 !important;
+  }
+  .stat-title {
+    font-size: 0.8rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.25 !important;
+    width: 100% !important;
+  }
 
   /* Buttons smaller */
   .btn-lg { padding: .5rem 1.2rem !important; font-size: .85rem !important; }
@@ -3172,8 +3207,23 @@ p:last-child {
 
 @media (max-width: 390px) {
   .hero-title { font-size: 1.35rem !important; }
-  .stat-value { font-size: 1.2rem !important; }
-  .col-6.col-md-3 .stat-card { padding: .6rem .4rem !important; }
+  .stat-card {
+    padding: 0.85rem 0.4rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  .stat-value { font-size: 1.35rem !important; text-align: center !important; }
+  .stat-title {
+    font-size: 0.76rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    line-height: 1.2 !important;
+    width: 100% !important;
+  }
+  .col-6.col-md-3 .stat-card { padding: 0.85rem 0.4rem !important; }
   .mobile-quick-chip { font-size: .67rem; padding: .28rem .6rem; }
 }
 
