@@ -6,7 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.core.views import home_view, about_view, gallery_view, set_language_view, custom_404_view, custom_500_view
+from apps.core.views import home_view, about_view, gallery_view, presentation_view, set_language_view, custom_404_view, custom_500_view
 from apps.core import dashboard_views
 from apps.news.views import news_carousel_api
 
@@ -17,6 +17,8 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('about/', about_view, name='about'),
     path('gallery/', gallery_view, name='gallery'),
+    path('presentation/', presentation_view, name='presentation'),
+    path('slaydlar/', presentation_view, name='slaydlar'),
     path('contact/', include('apps.contacts.urls')),
 
     # Apps

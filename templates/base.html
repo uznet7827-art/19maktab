@@ -90,6 +90,11 @@
                                 {% trans "Aloqa" %}
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-primary fw-bold {% if 'presentation' in request.path or 'slaydlar' in request.path %}active{% endif %}" href="{% url 'presentation' %}">
+                                <i class="fas fa-desktop me-1"></i> {% trans "Taqdimot" %}
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Right Actions: Language & Dark Mode -->
@@ -160,6 +165,7 @@
                         <li><a href="{% url 'home' %}#eng-yaxshi-oqituvchi">{% trans "Eng yaxshi o'qituvchi" %}</a></li>
                         <li><a href="{% url 'gallery' %}">{% trans "Galereya" %}</a></li>
                         <li><a href="{% url 'contacts:contact' %}">{% trans "Bog'lanish" %}</a></li>
+                        <li><a href="{% url 'presentation' %}" class="text-warning fw-semibold"><i class="fas fa-desktop me-1"></i> {% trans "Loyiha taqdimoti (7 ta slayd)" %}</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
