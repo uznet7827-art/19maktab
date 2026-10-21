@@ -28,15 +28,12 @@
           {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yetakchi yoshlar va yorqin kelajak poydevori!" }}
         </p>
 
-        <div class="d-flex flex-wrap gap-2 gap-sm-3 justify-content-center justify-content-lg-start">
-          <a href="{% url 'about' %}" class="btn btn-light rounded-pill px-4 py-2 py-sm-3 fw-semibold text-primary shadow-sm" style="font-size: 0.92rem;">
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+          <a href="{% url 'about' %}" class="btn btn-light rounded-pill px-4 py-2 py-sm-3 fw-semibold text-primary shadow-sm" style="font-size: 0.95rem;">
             <i class="fas fa-info-circle me-1"></i> {% trans "Maktab haqida" %}
           </a>
-          <a href="{% url 'news:list' %}" class="btn btn-outline-light rounded-pill px-4 py-2 py-sm-3 fw-semibold shadow-sm" style="font-size: 0.92rem;">
+          <a href="{% url 'news:list' %}" class="btn btn-outline-light rounded-pill px-4 py-2 py-sm-3 fw-semibold shadow-sm" style="font-size: 0.95rem;">
             <i class="fas fa-newspaper me-1"></i> {% trans "Yangiliklar" %}
-          </a>
-          <a href="{% url 'presentation' %}" class="btn btn-warning rounded-pill px-4 py-2 py-sm-3 fw-bold text-dark shadow-sm" style="font-size: 0.92rem;">
-            <i class="fas fa-desktop me-1"></i> {% trans "Loyiha taqdimoti" %}
           </a>
         </div>
       </div>
