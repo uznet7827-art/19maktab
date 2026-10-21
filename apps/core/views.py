@@ -89,14 +89,6 @@ def gallery_view(request):
     return render(request, 'gallery.html', context)
 
 
-def presentation_view(request):
-    """
-    Renders the modern interactive 7-slide project presentation.
-    """
-    site_settings_obj = SiteSettings.objects.first()
-    return render(request, 'presentation.html', {'site_settings': site_settings_obj})
-
-
 @require_http_methods(["GET", "POST"])
 def set_language_view(request):
     """
