@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 from apps.core.views import home_view, about_view, gallery_view, set_language_view, custom_404_view, custom_500_view
 from apps.core import dashboard_views
@@ -18,6 +19,10 @@ urlpatterns = [
     path('about/', about_view, name='about'),
     path('gallery/', gallery_view, name='gallery'),
     path('contact/', include('apps.contacts.urls')),
+
+    # Old presentation redirects -> Home
+    path('presentation/', RedirectView.as_view(url='/', permanent=False)),
+    path('slaydlar/', RedirectView.as_view(url='/', permanent=False)),
 
     # Apps
     path('news/', include('apps.news.urls')),
