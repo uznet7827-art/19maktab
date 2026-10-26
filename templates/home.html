@@ -379,6 +379,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      ENG YAXSHI O'QITUVCHI  (anchor target)
 ═══════════════════════════════════════════════════════════ -->
+{% if best_teacher or featured_teachers %}
 <section class="py-5 bg-white border-top" id="eng-yaxshi-oqituvchi">
   <div class="container">
     <div class="text-center mb-4">
@@ -422,14 +423,6 @@
            style="background:linear-gradient(135deg,#8B5CF6,#4F46E5);color:#fff;border-radius:50px;padding:.5rem 1.6rem;font-weight:600;font-size:.85rem;">
           Profilni ko'rish <i class="fas fa-arrow-right ms-1"></i>
         </a>
-      </div>
-    </div>
-    {% else %}
-    <div class="text-center py-4">
-      <div class="empty-state-mini">
-        <i class="fas fa-chalkboard-teacher fa-3x mb-3" style="color:#C4B5FD;"></i>
-        <p class="text-muted mb-0">O'qituvchilar hali qo'shilmagan</p>
-        <p class="text-muted small">Admin paneldan qo'shing</p>
       </div>
     </div>
     {% endif %}
@@ -485,6 +478,7 @@
     {% endif %}
   </div>
 </section>
+{% endif %}
 
 <!-- Gallery Preview -->
 {% if gallery_preview %}

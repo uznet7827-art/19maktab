@@ -167,17 +167,29 @@
       <div class="col-12 text-center py-5">
         <div class="card border-0 rounded-4 shadow-sm p-5 mx-auto" style="max-width: 500px; background: #fff;">
           <div class="mb-3">
-            <i class="fas fa-user-slash fa-4x text-muted opacity-50"></i>
+            <i class="fas fa-chalkboard-teacher fa-4x text-muted opacity-50"></i>
           </div>
-          <h4 class="fw-bold mb-2">{% trans "O'qituvchi topilmadi" %}</h4>
-          <p class="text-muted small mb-4">
-            {% trans "Kiritilgan so'rov yoki tanlangan kafedra bo'yicha ma'lumot chiqmadi. Iltimos, boshqa qidiruv so'zini sinab ko'ring." %}
-          </p>
-          <div>
-            <a href="{% url 'teachers:list' %}" class="btn btn-primary rounded-pill px-4 btn-sm">
-              <i class="fas fa-users me-1"></i> {% trans "Barcha ustozlarni ko'rish" %}
-            </a>
-          </div>
+          {% if query or selected_department %}
+            <h4 class="fw-bold mb-2">{% trans "O'qituvchi topilmadi" %}</h4>
+            <p class="text-muted small mb-4">
+              {% trans "Kiritilgan so'rov yoki tanlangan yo'nalish bo'yicha ma'lumot chiqmadi. Iltimos, boshqa qidiruv so'zini sinab ko'ring." %}
+            </p>
+            <div>
+              <a href="{% url 'teachers:list' %}" class="btn btn-primary rounded-pill px-4 btn-sm">
+                <i class="fas fa-users me-1"></i> {% trans "Barcha ustozlarni ko'rish" %}
+              </a>
+            </div>
+          {% else %}
+            <h4 class="fw-bold mb-2">{% trans "Pedagoglar ma'lumotlari yangilanmoqda" %}</h4>
+            <p class="text-muted small mb-4">
+              {% trans "Maktabimiz o'qituvchilari bo'yicha to'liq va rasmiy ma'lumotlar bazasi tayyorlanmoqda. Tez orada barcha ustozlarimiz haqida batafsil ma'lumot joylashtiriladi." %}
+            </p>
+            <div>
+              <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill px-4 btn-sm">
+                <i class="fas fa-home me-1"></i> {% trans "Bosh sahifaga qaytish" %}
+              </a>
+            </div>
+          {% endif %}
         </div>
       </div>
       {% endfor %}
