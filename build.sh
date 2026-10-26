@@ -6,5 +6,10 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
 python manage.py migrate
-python manage.py create_sample_data
-python import_comprehensive_channel_data.py
+
+if [ -f "RESET_DATA_TRIGGER" ]; then
+    echo "RESET_DATA_TRIGGER topildi. Sayt ma'lumotlari tozalanmoqda..."
+    python manage.py reset_site_data
+fi
+
+
