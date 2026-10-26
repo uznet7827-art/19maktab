@@ -7,12 +7,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 
-from apps.core.views import home_view, about_view, gallery_view, set_language_view, custom_404_view, custom_500_view
+from apps.core.views import home_view, about_view, gallery_view, set_language_view, keep_alive_view, custom_404_view, custom_500_view
 from apps.core import dashboard_views
 from apps.news.views import news_carousel_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Health & Keep-alive for 24/7 ping robot
+    path('health/', keep_alive_view, name='health'),
+    path('api/keep-alive/', keep_alive_view, name='keep_alive'),
 
     # Core & Pages
     path('', home_view, name='home'),

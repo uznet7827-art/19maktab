@@ -118,6 +118,14 @@ def set_language_view(request):
     return redirect(next_url)
 
 
+def keep_alive_view(request):
+    """
+    Lightweight keep-alive and healthcheck endpoint.
+    Used by automated ping robots to keep Render active 24/7.
+    """
+    return JsonResponse({'status': 'ok', 'service': '19-maktab', 'alive': True})
+
+
 def custom_404_view(request, exception=None):
     return render(request, 'errors/404.html', status=404)
 
