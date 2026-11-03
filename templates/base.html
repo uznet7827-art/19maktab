@@ -52,10 +52,21 @@
                     <span class="brand-name">19-Maktab</span>
                 </a>
                 
-                <!-- Mobile Toggle Button -->
-                <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars fs-5"></i>
-                </button>
+                <!-- Mobile Actions (Admin link & Hamburger) -->
+                <div class="d-flex align-items-center gap-2 d-lg-none">
+                    {% if user.is_authenticated and user.is_staff %}
+                    <a href="{% url 'dashboard_home' %}" class="btn btn-sm btn-primary rounded-pill px-2 py-1 shadow-sm" style="font-size: 0.75rem;" title="Boshqaruv paneli">
+                        <i class="fas fa-tachometer-alt me-1"></i> Boshqaruv
+                    </a>
+                    {% else %}
+                    <a href="{% url 'dashboard_login' %}" class="btn btn-sm btn-outline-primary rounded-pill px-2 py-1" style="font-size: 0.75rem;" title="Admin panelga kirish">
+                        <i class="fas fa-user-shield me-1"></i> Admin
+                    </a>
+                    {% endif %}
+                    <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-bars fs-5"></i>
+                    </button>
+                </div>
 
                 <!-- Navigation Links to Dedicated Full Pages -->
                 <div class="collapse navbar-collapse" id="mainNavbar">
@@ -92,8 +103,8 @@
                         </li>
                     </ul>
 
-                    <!-- Right Actions: Language & Dark Mode -->
-                    <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0">
+                    <!-- Right Actions: Language, Dark Mode & Desktop Admin Button -->
+                    <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0 pt-2 pt-lg-0 border-top border-lg-0">
                         {% get_current_language as CURRENT_LANGUAGE %}
                         <select id="languageSwitcher" class="form-select form-select-sm lang-select" aria-label="Til tanlash">
                             <option value="uz" {% if CURRENT_LANGUAGE == 'uz' %}selected{% endif %}>UZ</option>
@@ -103,6 +114,15 @@
                         <button id="darkModeToggle" class="btn btn-sm btn-theme-toggle" aria-label="Rejim" title="Light / Dark mode">
                             <i class="fas fa-moon" id="darkModeIcon"></i>
                         </button>
+                        {% if user.is_authenticated and user.is_staff %}
+                        <a href="{% url 'dashboard_home' %}" class="btn btn-sm btn-primary rounded-pill px-3 py-1 ms-lg-1" style="font-size: 0.8rem;">
+                            <i class="fas fa-tachometer-alt me-1"></i> Boshqaruv
+                        </a>
+                        {% else %}
+                        <a href="{% url 'dashboard_login' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 ms-lg-1 d-none d-lg-inline-flex align-items-center" style="font-size: 0.8rem;" title="Admin panelga kirish">
+                            <i class="fas fa-user-shield me-1"></i> Kirish
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -160,6 +180,7 @@
                         <li><a href="{% url 'home' %}#eng-yaxshi-oqituvchi">{% trans "Eng yaxshi o'qituvchi" %}</a></li>
                         <li><a href="{% url 'gallery' %}">{% trans "Galereya" %}</a></li>
                         <li><a href="{% url 'contacts:contact' %}">{% trans "Bog'lanish" %}</a></li>
+                        <li><a href="{% url 'dashboard_login' %}" class="text-warning"><i class="fas fa-user-shield me-1"></i> {% trans "Boshqaruv (Admin)" %}</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
