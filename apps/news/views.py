@@ -1,10 +1,15 @@
+import os
+import uuid
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q, F
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.text import slugify
+from django.utils import timezone
 
-from .models import News, NewsCategory
+from .models import News, NewsCategory, NewsImage
 
 
 def news_list_view(request):
@@ -97,3 +102,79 @@ def news_carousel_api(request):
         })
 
     return JsonResponse({'status': 'ok', 'count': len(data), 'results': data})
+
+
+BOT_SECRET_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '8864775756:AAECLlA465NwQR0E-93CYy07HPiuSs2B7Ko')
+
+
+@csrf_exempt
+@require_POST
+def create_news_from_bot_api(request):
+    """
+    API endpoint for Telegram News Bot to publish news directly to the website.
+    Secured by X-Bot-Token header.
+    """
+    token = request.headers.get('X-Bot-Token') or request.POST.get('bot_token')
+    if not token or token != BOT_SECRET_TOKEN:
+        return JsonResponse({'status': 'error', 'message': 'Ruxsat berilmadi (Noto\'g\'ri token)'}, status=403)
+
+    title = request.POST.get('title', '').strip()
+    content = request.POST.get('content', '').strip()
+    excerpt = request.POST.get('excerpt', '').strip()
+    category_name = request.POST.get('category', "Maktab yangiliklari").strip()
+
+    if not title:
+        return JsonResponse({'status': 'error', 'message': 'Sarlavha bo\'sh bo\'lishi mumkin emas'}, status=400)
+
+    if not content:
+        content = title
+
+    if not excerpt:
+        excerpt = content[:200] + ('...' if len(content) > 200 else '')
+
+    category, _ = NewsCategory.objects.get_or_create(
+        name=category_name,
+        defaults={'slug': slugify(category_name) or 'yangiliklar', 'color': '#4F46E5'}
+    )
+
+    base_slug = slugify(title)
+    if not base_slug:
+        base_slug = f"news-{uuid.uuid4().hex[:8]}"
+    slug = base_slug
+    counter = 1
+    while News.objects.filter(slug=slug).exists():
+        slug = f"{base_slug}-{counter}"
+        counter += 1
+
+    cover_image = request.FILES.get('cover_image')
+
+    news_item = News.objects.create(
+        title=title,
+        slug=slug,
+        category=category,
+        excerpt=excerpt,
+        content=content,
+        cover_image=cover_image,
+        status='published',
+        published_at=timezone.now(),
+        is_featured=True
+    )
+
+    gallery_files = request.FILES.getlist('gallery_images')
+    for idx, gfile in enumerate(gallery_files, start=1):
+        NewsImage.objects.create(
+            news=news_item,
+            image=gfile,
+            order=idx
+        )
+
+    full_url = request.build_absolute_uri(news_item.get_absolute_url())
+
+    return JsonResponse({
+        'status': 'ok',
+        'id': news_item.id,
+        'title': news_item.title,
+        'slug': news_item.slug,
+        'url': full_url,
+        'message': 'Yangilik muvaffaqiyatli e\'lon qilindi!'
+    })
