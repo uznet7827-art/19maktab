@@ -38,14 +38,23 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Clean school photo -->
+      <!-- RIGHT COLUMN: Interactive school video player -->
       <div class="col-lg-5 text-center">
-        <div class="hero-photo-frame mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-20">
-          {% if site_settings.hero_image %}
-            <img src="{{ site_settings.hero_image.url }}" alt="19-maktab" class="w-100 h-100" style="object-fit: cover;">
-          {% else %}
-            <img src="/media/site/hero_school.jpg" alt="19-maktab" class="w-100 h-100" style="object-fit: cover;">
-          {% endif %}
+        <div class="position-relative mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-25" 
+             style="max-width: 480px; aspect-ratio: 16/9; background: #0F172A;">
+          <video controls playsinline preload="metadata" 
+                 poster="/media/site/hero_school.jpg" 
+                 class="w-100 h-100" 
+                 style="object-fit: cover;">
+            <source src="/media/videos/maktab19_video_rolik.mp4" type="video/mp4">
+            Brauzeringiz videoni qo'llab-quvvatlamaydi.
+          </video>
+          <div class="position-absolute top-0 start-0 m-3" style="pointer-events: none;">
+            <span class="badge rounded-pill px-3 py-1 shadow-sm d-inline-flex align-items-center gap-1"
+                  style="background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(8px); color: #fff; font-size: 0.78rem;">
+              <i class="fas fa-play-circle text-warning"></i> 19-maktab videoroligi
+            </span>
+          </div>
         </div>
       </div>
 
