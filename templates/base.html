@@ -52,15 +52,11 @@
                     <span class="brand-name">19-Maktab</span>
                 </a>
                 
-                <!-- Mobile Actions (Admin link & Hamburger) -->
+                <!-- Mobile Actions (Hamburger) -->
                 <div class="d-flex align-items-center gap-2 d-lg-none">
                     {% if user.is_authenticated and user.is_staff %}
                     <a href="{% url 'dashboard_home' %}" class="btn btn-sm btn-primary rounded-pill px-2 py-1 shadow-sm" style="font-size: 0.75rem;" title="Boshqaruv paneli">
                         <i class="fas fa-tachometer-alt me-1"></i> Boshqaruv
-                    </a>
-                    {% else %}
-                    <a href="{% url 'dashboard_login' %}" class="btn btn-sm btn-outline-primary rounded-pill px-2 py-1" style="font-size: 0.75rem;" title="Admin panelga kirish">
-                        <i class="fas fa-user-shield me-1"></i> Admin
                     </a>
                     {% endif %}
                     <button class="navbar-toggler border-0 shadow-none p-1" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,10 +113,6 @@
                         {% if user.is_authenticated and user.is_staff %}
                         <a href="{% url 'dashboard_home' %}" class="btn btn-sm btn-primary rounded-pill px-3 py-1 ms-lg-1" style="font-size: 0.8rem;">
                             <i class="fas fa-tachometer-alt me-1"></i> Boshqaruv
-                        </a>
-                        {% else %}
-                        <a href="{% url 'dashboard_login' %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 ms-lg-1 d-none d-lg-inline-flex align-items-center" style="font-size: 0.8rem;" title="Admin panelga kirish">
-                            <i class="fas fa-user-shield me-1"></i> Kirish
                         </a>
                         {% endif %}
                     </div>

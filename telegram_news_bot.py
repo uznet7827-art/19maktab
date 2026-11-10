@@ -1,10 +1,11 @@
 """
 19-Maktab — Telegram Yangiliklar & Avto-Sinxronizatsiya Boti
 ============================================================
-1. Botga yuborilgan rasm + matnni to'g'ridan-to'g'ri maktab saytiga yangilik qilib joylaydi.
-2. @maktab19_rasmiy kanalini doimiy kuzatib boradi: kanalda yangi post chiqsa,
-   avtomatik ravishda rasmlari bilan saytga joylaydi va adminni xabardor qiladi!
-3. Sayt uxlab qolmasligi uchun fon rejimida har 5 daqiqada uyg'otib turadi (Keep-Alive).
+1. Botga yuborilgan rasm, video va matnlarni to'g'ridan-to'g'ri maktab saytiga yangilik qilib joylaydi.
+2. Yangi o'zbek lotin alifbosi qoidalariga to'liq moslashtiradi (kirillcha matnlarni lotinchaga o'giradi).
+3. @maktab19_rasmiy kanalini doimiy kuzatib boradi: yangi post yoki video chiqsa,
+   avtomatik ravishda rasmlari/videolari bilan saytga joylaydi.
+4. Sayt uxlab qolmasligi uchun fon rejimida har 5 daqiqada uyg'otib turadi (Keep-Alive).
 """
 
 import os
@@ -29,7 +30,7 @@ django.setup()
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.utils import timezone
-from apps.news.models import News, NewsCategory, NewsImage
+from apps.news.models import News, NewsCategory, NewsImage, NewsVideo
 
 BOT_TOKEN = "8864775756:AAECLlA465NwQR0E-93CYy07HPiuSs2B7Ko"
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
@@ -37,42 +38,80 @@ CHANNEL_URL = "https://t.me/s/maktab19_rasmiy"
 
 # Jonli sayt manzillari
 LIVE_SITE_URL = "https://one9maktab-nmg.onrender.com"
-CUSTOM_DOMAIN_URL = "https://nmg-19maktab.uz"
 HEALTH_ENDPOINT = f"{LIVE_SITE_URL}/health/"
 
-# Admin Telegram ID (xabarlar yuborish uchun xotirada saqlanadi)
+# Admin Telegram ID lar to'plami
 ADMIN_CHAT_IDS = set()
+
+
+# Yangi lotin alifbosi transliteratsiyasi
+CYR_TO_LAT_MAP = {
+    'А': 'A', 'а': 'a', 'Б': 'B', 'б': 'b', 'В': 'V', 'в': 'v',
+    'Г': 'G', 'г': 'g', 'Д': 'D', 'д': 'd', 'Е': 'E', 'е': 'e',
+    'Ё': 'Yo', 'ё': 'yo', 'Ж': 'J', 'ж': 'j', 'З': 'Z', 'з': 'z',
+    'И': 'I', 'и': 'i', 'Й': 'Y', 'й': 'y', 'К': 'K', 'к': 'k',
+    'Л': 'L', 'л': 'l', 'М': 'M', 'м': 'm', 'Н': 'N', 'н': 'n',
+    'О': 'O', 'о': 'o', 'П': 'P', 'п': 'p', 'Р': 'R', 'р': 'r',
+    'С': 'S', 'с': 's', 'Т': 'T', 'т': 't', 'У': 'U', 'у': 'u',
+    'Ф': 'F', 'ф': 'f', 'Х': 'X', 'х': 'x', 'Ц': 'Ts', 'ц': 'ts',
+    'Ч': 'Ch', 'ч': 'ch', 'Ш': 'Sh', 'ш': 'sh', 'Щ': 'Sh', 'щ': 'sh',
+    'Ъ': "'", 'ъ': "'", 'Ы': 'I', 'ы': 'i', 'Ь': '', 'ь': '',
+    'Э': 'E', 'э': 'e', 'Ю': 'Yu', 'ю': 'yu', 'Я': 'Ya', 'я': 'ya',
+    'Ў': "O‘", 'ў': "o‘", 'Қ': 'Q', 'қ': 'q', 'Ғ': "G‘", 'ғ': "g‘",
+    'Ҳ': 'H', 'ҳ': 'h',
+}
+
+def cyrillic_to_latin(text):
+    """Kirill yozuvidagi matnni zamonaviy o'zbek lotin alifbosiga o'tkazish."""
+    if not text:
+        return text
+    res = []
+    i = 0
+    length = len(text)
+    while i < length:
+        ch = text[i]
+        prev_ch = text[i-1] if i > 0 else ' '
+        if ch in ('Е', 'е'):
+            is_word_start = (i == 0 or prev_ch in ' \n\t.,;:!?"\'«»-–—')
+            is_after_vowel = prev_ch.upper() in 'АЕЁИОУЭЮЯЎAEOIU'
+            if is_word_start or is_after_vowel:
+                res.append('Ye' if ch == 'Е' else 'ye')
+            else:
+                res.append('E' if ch == 'Е' else 'e')
+        elif ch in CYR_TO_LAT_MAP:
+            res.append(CYR_TO_LAT_MAP[ch])
+        else:
+            res.append(ch)
+        i += 1
+    converted = "".join(res)
+    return converted.replace('`', "'").replace('’', "'").replace('ʻ', "‘").replace('ʼ', "‘")
 
 
 def send_telegram_message(chat_id, text, reply_markup=None):
     """Foydalanuvchiga Telegram xabari yuborish."""
     url = f"{TELEGRAM_API}/sendMessage"
-    payload = {
-        "chat_id": chat_id,
-        "text": text,
-        "parse_mode": "HTML",
-    }
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
     if reply_markup:
         payload["reply_markup"] = reply_markup
     try:
         requests.post(url, json=payload, timeout=10)
     except Exception as e:
-        print(f"[TG XATOSI] Xabar yuborishda xato: {e}")
+        print(f"[TG XATOSI] {e}")
 
 
 def get_file_bytes(file_id):
-    """Telegram serveridan rasm faylini yuklab olish."""
+    """Telegram serveridan fayl (rasm/video) yuklab olish."""
     try:
-        f_info = requests.get(f"{TELEGRAM_API}/getFile?file_id={file_id}", timeout=10).json()
+        f_info = requests.get(f"{TELEGRAM_API}/getFile?file_id={file_id}", timeout=15).json()
         if f_info.get("ok"):
             file_path = f_info["result"]["file_path"]
             download_url = f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}"
-            resp = requests.get(download_url, timeout=25)
+            resp = requests.get(download_url, timeout=45)
             if resp.status_code == 200:
                 ext = file_path.split('.')[-1] if '.' in file_path else 'jpg'
                 return resp.content, f"{uuid.uuid4().hex[:8]}.{ext}"
     except Exception as e:
-        print(f"[YUKLASH XATOSI] Rasm yuklanmadi: {e}")
+        print(f"[YUKLASH XATOSI] Fayl yuklanmadi: {e}")
     return None, None
 
 
@@ -97,13 +136,14 @@ def detect_category_for_text(text):
 
 
 def parse_post_text(text):
-    """Matnni chiroyli sarlavha va HTML formatli mazmunga ajratish."""
-    if not text:
-        return "19-maktab hayotidan fotolavha", "<p>Namangan tumani 19-sonli umumiy o'rta ta'lim maktabi faoliyatidan lavha.</p>"
+    """Matnni tozalab, lotin alifbosidagi sarlavha va HTML formatli mazmunga ajratish."""
+    text = cyrillic_to_latin(text or "")
+    if not text.strip():
+        return "19-maktab hayotidan yangilik", "<p>Namangan tumani 19-sonli umumiy o'rta ta'lim maktabi faoliyatidan lavha.</p>"
 
     lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
     if not lines:
-        return "19-maktab hayotidan fotolavha", f"<p>{text}</p>"
+        return "19-maktab hayotidan yangilik", f"<p>{text}</p>"
 
     first_line = re.sub(r'^[•\-\–\—\*\s]+', '', lines[0])
     if len(first_line) > 130:
@@ -124,8 +164,11 @@ def parse_post_text(text):
     return title.strip(), content
 
 
-def save_news_to_django(title, content, cover_bytes, cover_filename, category=None, post_num=None, gallery_bytes_list=None):
-    """Yangilikni to'g'ridan-to'g'ri Django bazasiga saqlash."""
+def save_news_to_django(title, content, cover_bytes=None, cover_filename=None, category=None, post_num=None, gallery_bytes_list=None, video_bytes=None, video_filename=None):
+    """Yangilik, rasmlar va videolarni Django bazasiga saqlash."""
+    title = cyrillic_to_latin(title)
+    content = cyrillic_to_latin(content)
+
     if not category:
         category = detect_category_for_text(title + " " + content)
 
@@ -152,11 +195,11 @@ def save_news_to_django(title, content, cover_bytes, cover_filename, category=No
         status='published',
         published_at=timezone.now(),
         is_featured=True,
-        views_count=20
+        views_count=25
     )
 
     if cover_bytes:
-        news_item.cover_image.save(cover_filename, ContentFile(cover_bytes), save=False)
+        news_item.cover_image.save(cover_filename or "cover.jpg", ContentFile(cover_bytes), save=False)
 
     news_item.save()
 
@@ -165,6 +208,14 @@ def save_news_to_django(title, content, cover_bytes, cover_filename, category=No
         for idx, (img_bytes, img_name) in enumerate(gallery_bytes_list):
             img_obj = NewsImage(news=news_item, order=idx + 1)
             img_obj.image.save(img_name, ContentFile(img_bytes), save=True)
+
+    # Video faylini qo'shish
+    if video_bytes:
+        vid_obj = NewsVideo(
+            news=news_item,
+            title=f"{title[:90]} (Videolavha)"
+        )
+        vid_obj.video_file.save(video_filename or "video.mp4", ContentFile(video_bytes), save=True)
 
     return news_item
 
@@ -180,21 +231,23 @@ def handle_update(update):
 
     text = message.get("text") or message.get("caption") or ""
     photos = message.get("photo")
+    video = message.get("video") or message.get("video_note") or message.get("animation")
 
     # /start buyrug'i
     if text.strip().startswith("/start"):
         start_msg = (
             "👋 <b>Assalomu alaykum!</b>\n\n"
-            "Bu <b>19-sonli maktabning rasmiy sayt boti</b>.\n\n"
+            "Bu <b>19-sonli maktabning rasmiy yangiliklar va media boti</b>.\n\n"
             "🌟 <b>Imkoniyatlar:</b>\n"
-            "1. Menga <b>rasm va matn</b> yuborsangiz — darhol maktab saytiga yangilik qilib joylayman!\n"
-            "2. <b>@maktab19_rasmiy</b> kanaliga joylangan barcha yangiliklarni ham avtomatik tarzda saytga qo'shib boraman!\n"
-            "3. Maktab saytini doimiy uyg'oq (faol) holatda ushlab turaman. 🚀"
+            "• Menga <b>rasm</b> yoki <b>video</b> va uning matnini yuborsangiz — darhol maktab saytiga yangilik qilib joylayman!\n"
+            "• Barcha matnlar avtomatik tarzda <b>yangi lotin alifbosi</b> qoidalariga moslashtiriladi.\n"
+            "• <b>@maktab19_rasmiy</b> kanalidagi yangi postlar avtomatik tarzda saytga o'tib boradi!\n"
+            "• Sayt serveri doimiy uyg'oq (faol) holatda ushlab turiladi. 🚀"
         )
         markup = {
             "inline_keyboard": [
                 [{"text": "🌐 Saytni ochish", "url": LIVE_SITE_URL}],
-                [{"text": "⚙️ Admin panel", "url": f"{LIVE_SITE_URL}/dashboard/login/"}]
+                [{"text": "📰 Yangiliklar", "url": f"{LIVE_SITE_URL}/news/"}]
             ]
         }
         send_telegram_message(chat_id, start_msg, markup)
@@ -210,8 +263,9 @@ def handle_update(update):
             status_text = (
                 f"🟢 <b>Sayt to'liq faol va uyg'oq!</b>\n\n"
                 f"⏱ Javob vaqti: <b>{elapsed} ms</b>\n"
-                f"📰 Saytdagi yangiliklar soni: <b>{db_news_count} ta</b>\n"
-                f"📡 @maktab19_rasmiy kanali: <b>Ulangan (Avto-sinxron)</b>\n\n"
+                f"📰 Saytdagi jami yangiliklar: <b>{db_news_count} ta</b>\n"
+                f"📡 @maktab19_rasmiy kanali: <b>Ulangan (Avto-sinxron)</b>\n"
+                f"🔤 Yozuv tizimi: <b>Yangi o'zbek lotin alifbosi</b>\n\n"
                 f"🔗 {LIVE_SITE_URL}"
             )
         except Exception as e:
@@ -219,29 +273,52 @@ def handle_update(update):
         send_telegram_message(chat_id, status_text)
         return
 
-    # Yangilik qo'shish jarayoni
-    send_telegram_message(chat_id, "⏳ <i>Yangilik qabul qilindi, chiroyli ko'rinishda saytga joylanmoqda...</i>")
+    # Yangilik / Media qo'shish
+    send_telegram_message(chat_id, "⏳ <i>Media qabul qilindi, yangi lotin alifbosida saytga joylanmoqda...</i>")
 
     cover_bytes = None
     cover_filename = "cover.jpg"
+    video_bytes = None
+    video_filename = "video.mp4"
 
+    # Rasm mavjud bo'lsa
     if photos:
         best_photo = photos[-1]
         file_id = best_photo["file_id"]
         cover_bytes, cover_filename = get_file_bytes(file_id)
 
+    # Video mavjud bo'lsa
+    if video:
+        v_file_id = video["file_id"]
+        video_bytes, video_filename = get_file_bytes(v_file_id)
+        # Agar rasm bo'lmasa, videoning thumb rasmiga urinib ko'ramiz
+        if not cover_bytes and video.get("thumbnail"):
+            cover_bytes, cover_filename = get_file_bytes(video["thumbnail"]["file_id"])
+
     title, content = parse_post_text(text)
 
-    if not text and cover_bytes:
-        title = f"19-maktab hayotidan fotolavha ({time.strftime('%d.%m.%Y')})"
-        content = "<p>Namangan tumani 19-sonli umumiy o'rta ta'lim maktabi faoliyatidan lavha.</p>"
+    if not text:
+        if video_bytes:
+            title = f"19-maktab hayotidan videolavha ({time.strftime('%d.%m.%Y')})"
+            content = "<p>Namangan tumani 19-sonli maktab faoliyatidan maxsus videolavha.</p>"
+        elif cover_bytes:
+            title = f"19-maktab hayotidan fotolavha ({time.strftime('%d.%m.%Y')})"
+            content = "<p>Namangan tumani 19-sonli umumiy o'rta ta'lim maktabi tadbirlaridan fotolavha.</p>"
 
     try:
-        news_item = save_news_to_django(title, content, cover_bytes, cover_filename)
+        news_item = save_news_to_django(
+            title=title,
+            content=content,
+            cover_bytes=cover_bytes,
+            cover_filename=cover_filename,
+            video_bytes=video_bytes,
+            video_filename=video_filename
+        )
         news_url = f"{LIVE_SITE_URL}{news_item.get_absolute_url()}"
 
+        media_icon = "📹" if video_bytes else "📸"
         reply_msg = (
-            "✅ <b>Yangilik saytga muvaffaqiyatli joylandi!</b>\n\n"
+            f"✅ <b>{media_icon} Yangilik saytga muvaffaqiyatli joylandi!</b>\n\n"
             f"📌 <b>Sarlavha:</b> {news_item.title}\n"
             f"📂 <b>Toifa:</b> {news_item.category.name if news_item.category else 'Maktab'}\n"
             f"📅 <b>Sana:</b> {news_item.published_at.strftime('%d.%m.%Y %H:%M')}\n\n"
@@ -250,11 +327,11 @@ def handle_update(update):
         markup = {
             "inline_keyboard": [
                 [{"text": "👀 Yangilikni ko'rish", "url": news_url}],
-                [{"text": "🌐 Bosh sahifa", "url": LIVE_SITE_URL}]
+                [{"text": "🌐 Saytga o'tish", "url": LIVE_SITE_URL}]
             ]
         }
         send_telegram_message(chat_id, reply_msg, markup)
-        print(f"[OK] Yangilik saqlandi: {news_item.title} ({news_item.slug})")
+        print(f"[OK] Media yangilik saqlandi: {news_item.title} ({news_item.slug})")
     except Exception as e:
         print(f"[XATO] Saqlashda xatolik: {e}")
         send_telegram_message(chat_id, f"❌ <b>Xatolik yuz berdi:</b> {e}\n\nIltimos, qaytadan urinib ko'ring.")
@@ -271,9 +348,9 @@ def keep_alive_daemon():
 
 
 def sync_channel_daemon():
-    """@maktab19_rasmiy kanalini doimiy kuzatib, yangi postlarni avtomatik saytga joylaydi."""
-    time.sleep(15)  # Dastlabki yuklanishni kutish
-    print("[KANAL KUZATUVCHI] @maktab19_rasmiy kanali nazorati boshlandi.")
+    """@maktab19_rasmiy kanalini doimiy kuzatib, yangi post va videolarni avtomatik saytga joylaydi."""
+    time.sleep(15)
+    print("[KANAL KUZATUVCHI] @maktab19_rasmiy kanali nazorati faol.")
 
     while True:
         try:
@@ -306,9 +383,15 @@ def sync_channel_daemon():
                         if m:
                             photo_links.append(m.group(1))
 
-                    if not text and not photo_links:
+                    # Videolarni tekshirish
+                    video_link = None
+                    vid_tag = msg.find('video')
+                    if vid_tag and vid_tag.get('src'):
+                        video_link = vid_tag['src']
+
+                    if not text and not photo_links and not video_link:
                         continue
-                    if len(text) < 15 and not photo_links:
+                    if len(text) < 15 and not photo_links and not video_link:
                         continue
 
                     title, content = parse_post_text(text)
@@ -330,6 +413,17 @@ def sync_channel_daemon():
                             if r_g.status_code == 200 and len(r_g.content) > 1000:
                                 gallery_list.append((r_g.content, f"maktab19_{num}_g_{g_idx+1}.jpg"))
 
+                    # Video fayli
+                    video_bytes = None
+                    video_name = f"maktab19_{num}_video.mp4"
+                    if video_link:
+                        try:
+                            r_v = requests.get(video_link, timeout=40, headers=headers)
+                            if r_v.status_code == 200 and len(r_v.content) > 5000:
+                                video_bytes = r_v.content
+                        except Exception:
+                            pass
+
                     news_item = save_news_to_django(
                         title=title,
                         content=content,
@@ -337,14 +431,16 @@ def sync_channel_daemon():
                         cover_filename=cover_name,
                         category=category,
                         post_num=num,
-                        gallery_bytes_list=gallery_list
+                        gallery_bytes_list=gallery_list,
+                        video_bytes=video_bytes,
+                        video_filename=video_name
                     )
-                    print(f"[KANAL -> SAYT] Yangi post saytga joylandi: #{num} - {news_item.title}")
+                    print(f"[KANAL -> SAYT] Yangi post/video saytga joylandi: #{num} - {news_item.title}")
 
                     # Adminlarga bildirishnoma yuborish
                     for c_id in list(ADMIN_CHAT_IDS):
                         notif = (
-                            "📢 <b>@maktab19_rasmiy kanalidan yangi post saytga joylandi!</b>\n\n"
+                            "📢 <b>@maktab19_rasmiy kanalidan yangi yangilik saytga joylandi!</b>\n\n"
                             f"📌 <b>Sarlavha:</b> {news_item.title}\n"
                             f"🔗 {LIVE_SITE_URL}{news_item.get_absolute_url()}"
                         )
@@ -352,22 +448,21 @@ def sync_channel_daemon():
         except Exception as e:
             print(f"[KANAL XATOSI] {e}")
 
-        time.sleep(300)  # Har 5 daqiqada tekshiradi
+        time.sleep(300)
 
 
 def run_bot():
     """Telegram Botni doimiy eshitish (Polling) rejimida ishga tushirish."""
     print("=" * 65)
-    print(" 19-Maktab Telegram Boti & Avto-Sinxronizatsiya tizimi ishga tushdi!")
-    print(f" Bot manzili: @Xoldarxojayev_agent_ai_bot")
-    print(f" Kuzatilayotgan kanal: @maktab19_rasmiy")
+    print(" 19-Maktab Media & Yangiliklar Boti ishga tushdi!")
+    print(f" Bot: @Xoldarxojayev_agent_ai_bot")
+    print(f" Kanal: @maktab19_rasmiy")
+    print(" Video, rasm va lotin alifbosi qo'llab-quvvatlanadi.")
     print("=" * 65)
 
-    # 1. Keep-alive tizimi
     t_keep = threading.Thread(target=keep_alive_daemon, daemon=True)
     t_keep.start()
 
-    # 2. Kanal avto-sinxronizatsiya tizimi
     t_sync = threading.Thread(target=sync_channel_daemon, daemon=True)
     t_sync.start()
 
