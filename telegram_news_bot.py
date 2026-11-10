@@ -1,30 +1,36 @@
 """
 19-Maktab — Telegram Yangiliklar Boti
 =====================================
-Ushbu bot Telegram orqali yuborilgan postlarni (matn + rasmlar)
-avtomatik tarzda maktab rasmiy saytiga yangilik qilib joylaydi!
-
-Foydalanish:
-1. Botga /start buyrug'ini yuboring.
-2. Botga matn yoki rasm (tagida matni bilan) yuboring.
-3. Bot yangilikni saytga chiqaradi va tayyor havolani qaytaradi.
-4. Fonda har 5 daqiqada saytni uyg'otib turadi (Render uxlamaydi).
+Telegram orqali yuborilgan postlarni (matn + rasmlar)
+avtomatik tarzda maktab saytiga yangilik qilib joylaydi!
 """
 
 import os
 import sys
 import time
+import uuid
 import threading
 import requests
 from io import BytesIO
 
+# Django muhitini yuklaymiz
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+
+import django
+django.setup()
+
+from django.core.files.base import ContentFile
+from django.utils.text import slugify
+from django.utils import timezone
+from apps.news.models import News, NewsCategory, NewsImage
+
 BOT_TOKEN = "8864775756:AAECLlA465NwQR0E-93CYy07HPiuSs2B7Ko"
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
-# Sayt manzillari
+# Jonli sayt manzili
 LIVE_SITE_URL = "https://one9maktab-nmg.onrender.com"
-CUSTOM_DOMAIN_URL = "https://nmg-19maktab.uz"
-API_ENDPOINT = f"{LIVE_SITE_URL}/news/api/create-from-bot/"
 HEALTH_ENDPOINT = f"{LIVE_SITE_URL}/health/"
 
 
@@ -54,62 +60,82 @@ def get_file_bytes(file_id):
             resp = requests.get(download_url, timeout=25)
             if resp.status_code == 200:
                 ext = file_path.split('.')[-1] if '.' in file_path else 'jpg'
-                return resp.content, f"image.{ext}"
+                return resp.content, f"{uuid.uuid4().hex[:8]}.{ext}"
     except Exception as e:
         print(f"[YUKLASH XATOSI] Rasm yuklanmadi: {e}")
     return None, None
 
 
-def publish_to_website(title, content, cover_bytes=None, cover_filename="cover.jpg"):
-    """Maktab saytiga yangilikni e'lon qilish."""
-    headers = {
-        "X-Bot-Token": BOT_TOKEN
-    }
-    data = {
-        "title": title,
-        "content": content,
-        "excerpt": content[:180] + ("..." if len(content) > 180 else ""),
-        "category": "Maktab yangiliklari"
-    }
-
-    files = {}
-    if cover_bytes:
-        files["cover_image"] = (cover_filename, BytesIO(cover_bytes), "image/jpeg")
-
-    try:
-        resp = requests.post(API_ENDPOINT, data=data, files=files, headers=headers, timeout=40)
-        return resp.json()
-    except Exception as e:
-        # Fallback to localhost if live site is updating
-        try:
-            resp = requests.post("http://127.0.0.1:8000/news/api/create-from-bot/", data=data, files=files, headers=headers, timeout=10)
-            return resp.json()
-        except Exception:
-            return {"status": "error", "message": str(e)}
-
-
 def parse_post_text(text):
-    """Matnni sarlavha va asosiy mazmunga ajratish."""
+    """Matnni chiroyli sarlavha va asosiy mazmunga ajratish."""
     if not text:
-        return "19-maktab yangiligi", ""
+        return "19-maktab hayotidan yangilik", ""
 
     lines = [line.strip() for line in text.strip().split('\n') if line.strip()]
     if not lines:
-        return "19-maktab yangiligi", text
+        return "19-maktab hayotidan yangilik", text
 
-    # Birinchi qator — Sarlavha
-    title = lines[0]
-    # Agar sarlavha juda uzun bo'lsa (120 belgidan ortiq), qisqartirish
-    if len(title) > 120:
-        first_sentence = title.split('.')[0]
-        if len(first_sentence) < 120:
-            title = first_sentence
-        else:
-            title = title[:115] + "..."
+    first_line = lines[0]
+    if len(first_line) > 130:
+        sentences = first_line.split('.')
+        title = sentences[0] if len(sentences[0]) < 130 else first_line[:125] + "..."
+    else:
+        title = first_line
 
-    # Qolgan barcha matn — To'liq mazmun
     content = text.strip()
     return title, content
+
+
+def save_news_to_django(title, content, cover_bytes, cover_filename):
+    """Yangilikni to'g'ridan-to'g'ri Django bazasiga saqlash."""
+    base_slug = slugify(title)
+    if not base_slug:
+        base_slug = f"news-{uuid.uuid4().hex[:8]}"
+    
+    slug = base_slug
+    counter = 1
+    while News.objects.filter(slug=slug).exists():
+        slug = f"{base_slug}-{counter}"
+        counter += 1
+
+    category, _ = NewsCategory.objects.get_or_create(
+        name="Maktab yangiliklari",
+        defaults={'slug': 'maktab-yangiliklari', 'color': '#4F46E5'}
+    )
+
+    excerpt = content[:200] + ('...' if len(content) > 200 else '')
+
+    news_item = News(
+        title=title,
+        slug=slug,
+        category=category,
+        excerpt=excerpt,
+        content=content,
+        status='published',
+        published_at=timezone.now(),
+        is_featured=True
+    )
+
+    if cover_bytes:
+        news_item.cover_image.save(cover_filename, ContentFile(cover_bytes), save=False)
+
+    news_item.save()
+
+    # Jonli saytga ham API orqali uzatishga urinib ko'ramiz
+    try:
+        api_url = f"{LIVE_SITE_URL}/news/api/create-from-bot/"
+        files = {"cover_image": (cover_filename, BytesIO(cover_bytes), "image/jpeg")} if cover_bytes else {}
+        requests.post(
+            api_url,
+            data={"title": title, "content": content, "excerpt": excerpt},
+            files=files,
+            headers={"X-Bot-Token": BOT_TOKEN},
+            timeout=10
+        )
+    except Exception:
+        pass
+
+    return news_item
 
 
 def handle_update(update):
@@ -129,7 +155,7 @@ def handle_update(update):
             "Bu <b>19-sonli maktabning rasmiy sayt boti</b>.\n\n"
             "📰 <b>Saytga yangilik qo'shish juda oson:</b>\n"
             "Menga shunchaki <b>rasm</b> va uning tagiga <b>matnini</b> yuboring (yoki kanaldan postni forward qiling).\n\n"
-            "Men uni darhol maktabning rasmiy veb-saytiga joylayman! 🚀"
+            "Men uni darhol maktab veb-saytiga joylayman! 🚀"
         )
         markup = {
             "inline_keyboard": [
@@ -148,52 +174,48 @@ def handle_update(update):
             elapsed = round((time.time() - t0) * 1000)
             status_text = f"🟢 <b>Sayt faol va uyg'oq!</b>\n⏱ Javob vaqti: <b>{elapsed} ms</b>\n🔗 {LIVE_SITE_URL}"
         except Exception as e:
-            status_text = f"🟡 <b>Sayt yuklanmoqda...</b>\n{e}"
+            status_text = f"🟡 <b>Sayt tekshirilmoqda...</b>\n{e}"
         send_telegram_message(chat_id, status_text)
         return
 
-    # Yangilik qo'shish jarayoni
+    # Yangilik qo'shish
     send_telegram_message(chat_id, "⏳ <i>Yangilik qabul qilindi, saytga joylanmoqda...</i>")
 
     cover_bytes = None
     cover_filename = "cover.jpg"
 
-    # Agar rasm yuborilgan bo'lsa
     if photos:
-        # Eng katta sifatdagi rasm oxirida turadi
         best_photo = photos[-1]
         file_id = best_photo["file_id"]
         cover_bytes, cover_filename = get_file_bytes(file_id)
 
     title, content = parse_post_text(text)
 
-    # Agar matn umuman bo'lmasa, lekin rasm bo'lsa
-    if not text:
+    if not text and cover_bytes:
         title = f"19-maktab hayotidan fotolavha ({time.strftime('%d.%m.%Y')})"
         content = "Namangan tumani 19-sonli umumiy o'rta ta'lim maktabida o'tkazilgan tadbirlar va dars jarayonidan fotolavha."
 
-    res = publish_to_website(title, content, cover_bytes, cover_filename)
+    try:
+        news_item = save_news_to_django(title, content, cover_bytes, cover_filename)
+        news_url = f"{LIVE_SITE_URL}{news_item.get_absolute_url()}"
 
-    if res.get("status") == "ok":
-        news_url = res.get("url") or f"{LIVE_SITE_URL}/news/{res.get('slug')}/"
         reply_msg = (
             "✅ <b>Yangilik saytga muvaffaqiyatli joylandi!</b>\n\n"
-            f"📌 <b>Sarlavha:</b> {title}\n"
-            f"📅 <b>Sana:</b> {time.strftime('%d.%m.%Y %H:%M')}\n\n"
+            f"📌 <b>Sarlavha:</b> {news_item.title}\n"
+            f"📅 <b>Sana:</b> {news_item.published_at.strftime('%d.%m.%Y %H:%M')}\n\n"
             f"🔗 <b>Saytda ko'rish:</b>\n{news_url}"
         )
         markup = {
             "inline_keyboard": [
                 [{"text": "👀 Yangilikni ko'rish", "url": news_url}],
-                [{"text": "🌐 Bosh sahifa", "url": LIVE_SITE_URL}]
+                [{"text": "🌐 Asosiy sayt", "url": LIVE_SITE_URL}]
             ]
         }
         send_telegram_message(chat_id, reply_msg, markup)
-        print(f"[OK] Yangilik saytga joylandi: {title}")
-    else:
-        err = res.get("message", "Noma'lum xatolik")
-        send_telegram_message(chat_id, f"❌ <b>Xatolik yuz berdi:</b> {err}\n\nIltimos, qaytadan urinib ko'ring.")
-        print(f"[XATO] Joylashda xato: {err}")
+        print(f"[OK] Yangilik muvaffaqiyatli saqlandi: {news_item.title} (slug: {news_item.slug})")
+    except Exception as e:
+        print(f"[XATO] Saqlashda xatolik: {e}")
+        send_telegram_message(chat_id, f"❌ <b>Xatolik yuz berdi:</b> {e}\n\nIltimos, qaytadan urinib ko'ring.")
 
 
 def keep_alive_daemon():
@@ -214,7 +236,6 @@ def run_bot():
     print(" Post tashlang — darhol saytga joylanadi.")
     print("=" * 60)
 
-    # Fon uyg'otuvchi robotni alohida thread'da ishga tushiramiz
     t = threading.Thread(target=keep_alive_daemon, daemon=True)
     t.start()
 
@@ -232,8 +253,7 @@ def run_bot():
                         except Exception as e:
                             print(f"[UPDATE XATOSI] {e}")
             elif resp.status_code == 409:
-                print("[OGOHLANTIRISH] Boshqa bot sessiyasi bor, 5 soniya kutilmoqda...")
-                time.sleep(5)
+                time.sleep(4)
         except requests.exceptions.RequestException:
             time.sleep(3)
         except Exception as e:
