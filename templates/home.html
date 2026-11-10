@@ -144,35 +144,36 @@
 <section class="py-5 border-top" id="bizning-direktor" style="background: linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 100%);">
   <div class="container">
     <div class="text-center mb-4">
-      <div class="section-label">👨‍💼 Bizning direktor</div>
+      <div class="section-label">👩‍💼 Bizning direktor</div>
       <h2 class="section-title">Rahbariyat murojaati</h2>
     </div>
-    <div class="director-card shadow-sm border-0 rounded-4 p-3 p-md-4 p-lg-5 bg-white">
-      <div class="director-photo-col text-center">
-        <div class="director-photo-wrapper mx-auto mb-3 shadow-sm rounded-4 overflow-hidden border border-3 border-light">
+    <div class="director-card shadow-sm border-0 rounded-4 p-4 p-md-5 bg-white d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 gap-lg-5 mx-auto" style="max-width: 950px;">
+      <div class="director-photo-col text-center" style="flex-shrink: 0;">
+        <div class="director-photo-wrapper mx-auto mb-3 shadow rounded-4 overflow-hidden" 
+             style="width: 170px; height: 215px; border: 4px solid #fff; box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.25) !important;">
           {% if site_settings.director_photo %}
             <img src="{{ site_settings.director_photo.url }}"
-                 alt="{{ site_settings.director_name }}" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                 alt="{{ site_settings.director_name }}" class="w-100 h-100" style="object-fit: cover; object-position: center top;">
           {% else %}
             <img src="{% static 'images/director.png' %}"
-                 alt="{{ site_settings.director_name|default:'Maktab direktori' }}" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                 alt="{{ site_settings.director_name|default:'Maktab direktori' }}" class="w-100 h-100" style="object-fit: cover; object-position: center top;">
           {% endif %}
         </div>
-        <h5 class="fw-bold mb-1 fs-6">{{ site_settings.director_name }}</h5>
+        <h5 class="fw-bold mb-1 fs-6" style="color: #1E293B;">{{ site_settings.director_name }}</h5>
         <p class="text-muted small mb-2">19-sonli maktab direktori</p>
         <span class="badge rounded-pill px-3 py-1 text-white shadow-sm"
-              style="background: linear-gradient(135deg, #4F46E5, #06B6D4); font-size: 0.72rem;">
+              style="background: linear-gradient(135deg, #4F46E5, #06B6D4); font-size: 0.72rem; letter-spacing: 0.5px;">
           <i class="fas fa-star me-1 text-warning"></i> Rahbariyat
         </span>
       </div>
-      <div class="director-message-col">
-        <div class="director-quote-mark" style="color: #4F46E5; opacity: 0.2; font-size: 3.5rem; line-height: 1; font-family: Georgia, serif; margin-bottom: -1rem;">“</div>
-        <p class="director-message-text" style="font-size: clamp(0.92rem, 2vw, 1.05rem); line-height: 1.85; color: #334155;">
-          {{ site_settings.director_message|default:"Bizning 19-umumiy o'rta ta'lim maktabimiz har bir o'quvchining qobiliyati va iqtidorini ro'yobga chiqarish, yoshlarni qonunlarga hurmat, yuksak ma'naviyat va zamonaviy ilm-fan ruhida tarbiyalashni bosh maqsad qilib qo'ygan. Maktabimiz eshiklari barcha yoshlarimiz uchun yuksak marralar va orzular sari hamisha ochiqdir!" }}
-        </p>
-        <div class="director-signature mt-3 pt-2 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
-          <span class="fw-bold text-primary">— {{ site_settings.director_name }}</span>
-          <span class="text-muted small"><i class="fas fa-school me-1"></i> 19-sonli maktab ma'muriyati</span>
+      <div class="director-message-col flex-grow-1 w-100 text-start">
+        <div class="director-quote-mark" style="color: #4F46E5; opacity: 0.18; font-size: 3.8rem; line-height: 0.8; font-family: Georgia, serif; margin-bottom: 0.25rem;">“</div>
+        <div class="director-message-text" style="font-size: clamp(0.95rem, 2vw, 1.08rem); line-height: 1.85; color: #334155; font-style: normal;">
+          {{ site_settings.director_message|linebreaks }}
+        </div>
+        <div class="director-signature mt-4 pt-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <span class="fw-bold text-primary" style="font-size: 1rem;">— {{ site_settings.director_name }}</span>
+          <span class="text-muted small"><i class="fas fa-school me-1 text-cyan"></i> 19-sonli maktab ma'muriyati</span>
         </div>
       </div>
     </div>

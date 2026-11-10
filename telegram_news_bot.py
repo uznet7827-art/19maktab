@@ -61,6 +61,28 @@ CYR_TO_LAT_MAP = {
     'Ҳ': 'H', 'ҳ': 'h',
 }
 
+def to_new_uzbek_reform(text):
+    """O'zbek yangi lotin alifbosi: sh->ş, ch->ç, o'->ó, g'->ğ"""
+    if not text:
+        return text
+    text = cyrillic_to_latin(text)
+    def convert_plain(t):
+        t = re.sub(r"G[‘ʻ'`]", "Ğ", t)
+        t = re.sub(r"g[‘ʻ'`]", "ğ", t)
+        t = re.sub(r"O[‘ʻ'`]", "Ó", t)
+        t = re.sub(r"o[‘ʻ'`]", "ó", t)
+        t = re.sub(r"CH\b", "Ç", t)
+        t = re.sub(r"Ch", "Ç", t)
+        t = re.sub(r"ch", "ç", t)
+        t = re.sub(r"SH\b", "Ş", t)
+        t = re.sub(r"Sh", "Ş", t)
+        t = re.sub(r"sh", "ş", t)
+        return t
+    parts = re.split(r'(<[^>]+>)', text)
+    new_parts = [p if (p.startswith('<') and p.endswith('>')) else convert_plain(p) for p in parts]
+    return "".join(new_parts)
+
+
 def cyrillic_to_latin(text):
     """Kirill yozuvidagi matnni zamonaviy o'zbek lotin alifbosiga o'tkazish."""
     if not text:
@@ -137,7 +159,7 @@ def detect_category_for_text(text):
 
 def parse_post_text(text):
     """Matnni tozalab, lotin alifbosidagi sarlavha va HTML formatli mazmunga ajratish."""
-    text = cyrillic_to_latin(text or "")
+    text = to_new_uzbek_reform(text or "")
     if not text.strip():
         return "19-maktab hayotidan yangilik", "<p>Namangan tumani 19-sonli umumiy o'rta ta'lim maktabi faoliyatidan lavha.</p>"
 
@@ -166,8 +188,8 @@ def parse_post_text(text):
 
 def save_news_to_django(title, content, cover_bytes=None, cover_filename=None, category=None, post_num=None, gallery_bytes_list=None, video_bytes=None, video_filename=None):
     """Yangilik, rasmlar va videolarni Django bazasiga saqlash."""
-    title = cyrillic_to_latin(title)
-    content = cyrillic_to_latin(content)
+    title = to_new_uzbek_reform(title)
+    content = to_new_uzbek_reform(content)
 
     if not category:
         category = detect_category_for_text(title + " " + content)
