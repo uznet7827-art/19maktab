@@ -14,7 +14,7 @@
     <div class="row align-items-center g-4 g-lg-5">
       
       <!-- LEFT COLUMN -->
-      <div class="col-lg-7 text-center text-lg-start">
+      <div class="col-lg-6 text-center text-lg-start">
         <span class="badge rounded-pill px-3 py-2 mb-3 border border-white border-opacity-25"
               style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px); font-size: 0.82rem; font-weight: 500;">
           <i class="fas fa-map-marker-alt text-warning me-1"></i> Namangan tumani, Mullakudung, 19-sonli maktab
@@ -25,7 +25,7 @@
         </h1>
 
         <p class="hero-subtitle mb-4 text-white-50 mx-auto mx-lg-0" style="font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.65; max-width: 520px;">
-          {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yetakchi yoshlar va yorqin kelajak poydevori!" }}
+          {{ site_settings.localized_tagline|default:"Sifatli ta'lim, yetakçi yoşlar va yorqin kelajak poydevori!" }}
         </p>
 
         <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
@@ -38,21 +38,21 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Interactive school video player -->
-      <div class="col-lg-5 text-center">
-        <div class="position-relative mx-auto rounded-4 overflow-hidden shadow-lg border border-3 border-white border-opacity-25" 
-             style="max-width: 480px; aspect-ratio: 16/9; background: #0F172A;">
+      <!-- RIGHT COLUMN: Large School Video Player -->
+      <div class="col-lg-6 text-center">
+        <div class="hero-video-wrapper position-relative mx-auto rounded-4 overflow-hidden border border-3 border-white border-opacity-25" 
+             style="max-width: 640px; aspect-ratio: 16/9; background: #0F172A; box-shadow: 0 20px 45px -10px rgba(0,0,0,0.55);">
           <video controls playsinline preload="metadata" 
-                 poster="/media/site/hero_school.jpg" 
+                 poster="/media/videos/video_poster_cinematic.jpg" 
                  class="w-100 h-100" 
-                 style="object-fit: cover;">
+                 style="object-fit: cover; border-radius: 16px;">
             <source src="/media/videos/maktab19_video_rolik.mp4" type="video/mp4">
             Brauzeringiz videoni qo'llab-quvvatlamaydi.
           </video>
           <div class="position-absolute top-0 start-0 m-3" style="pointer-events: none;">
-            <span class="badge rounded-pill px-3 py-1 shadow-sm d-inline-flex align-items-center gap-1"
-                  style="background: rgba(15, 23, 42, 0.78); backdrop-filter: blur(8px); color: #fff; font-size: 0.78rem;">
-              <i class="fas fa-play-circle text-warning"></i> 19-maktab videoroligi
+            <span class="badge rounded-pill px-3 py-1 shadow-sm d-inline-flex align-items-center gap-2"
+                  style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); color: #fff; font-size: 0.82rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.2);">
+              <i class="fas fa-play-circle text-warning fs-6"></i> 19-maktab rasmiy videoroligi
             </span>
           </div>
         </div>
